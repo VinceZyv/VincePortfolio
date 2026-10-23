@@ -1,0 +1,26 @@
+main{
+	font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+	min-height: 100vh;
+}
+*{
+
+	margin:0px;
+	padding:0px;
+	box-sizing: border-box;
+}
+
+.box{
+	background-color:#faf9b1;
+	color:#daa520;
+	font-size: 2rem;
+	padding:0.5rem;
+}
+
+.container{
+	display: grid;
+	min-height: 400px;
+	grid-auto-flow: column;
+	grid-template-columns: auto;
+         grid-template-rows: repeat(4,1fr);	
+	     gap:1em;	 
+}
