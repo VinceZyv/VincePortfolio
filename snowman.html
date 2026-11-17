@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas Snowman</title>
+
+    <style>
+        #myDrawing{
+            border: solid 1px black;
+            background-color: #87cefa; /* Light winter sky background */
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            display: grid;
+            place-items: center; /* Centers on both X and Y axes */
+        }
+    </style>
+</head>
+<body>
+    <canvas height="500" width="1000" id="myDrawing"></canvas>
+
+    <script>
+        const canvas = document.getElementById("myDrawing");
+        const ctx = canvas.getContext("2d");
+        const snowX = 800;
+
+        ctx.beginPath();
+        ctx.arc(snowX, 370, 75, 0, Math.PI * 2); 
+        ctx.fillStyle = '#e7feff '; 
+        ctx.fill();
+        ctx.strokeStyle = '#b0bec5';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(snowX, 275, 55, 0, Math.PI * 2); 
+        ctx.fillStyle = '#e7feff '; 
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(snowX, 200, 38, 0, Math.PI * 2); 
+        ctx.fillStyle = '#e7feff '; 
+        ctx.fill();
+        ctx.stroke();
+
+
+        const buttons = [255, 275, 295];
+        buttons.forEach(yCoord => {
+            ctx.beginPath();
+            ctx.arc(snowX, yCoord, 5, 0, Math.PI * 2);
+            ctx.fillStyle = '#37474f';
+            ctx.fill();
+        });
+   
+        ctx.beginPath();
+        ctx.arc(snowX - 10, y = 190, 4, 0, Math.PI * 2);
+        ctx.arc(snowX + 10, y = 190, 4, 0, Math.PI * 2);
+        ctx.fillStyle = '#37474f';
+        ctx.fill();
+
+		    ctx.beginPath();
+        ctx.moveTo(snowX, 200);
+        ctx.lineTo(snowX + 25, 205);
+        ctx.lineTo(snowX, 210);
+        ctx.fillStyle = '#ff9800';
+        ctx.fill();
+        ctx.strokeStyle = '#f57c00';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        
+        ctx.beginPath();
+        ctx.arc(snowX, 200, 18, 0.1 * Math.PI, 0.9 * Math.PI);
+        ctx.strokeStyle = '#37474f';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(snowX - 30, 162);
+        ctx.lineTo(snowX + 30, 162);
+        ctx.strokeStyle = '#263238';
+        ctx.lineWidth = 6;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(snowX - 18, 162);
+        ctx.lineTo(snowX - 18, 115);
+        ctx.lineTo(snowX + 18, 115);
+        ctx.lineTo(snowX + 18, 162);
+        ctx.fillStyle = '#263238';
+        ctx.fill();
+        ctx.stroke();
+
+    </script>
+</body>
+</html>
