@@ -21,7 +21,7 @@
             min-height: 100vh;
         }
 
-        /* Navigation Bar - Matches About Page */
+        /* Navigation Bar - Matches About, Portfolio & Contact */
         nav {
             background: #fcc200;
             display: flex;
@@ -46,7 +46,7 @@
             border-bottom: 4px solid #fff3b0;
         }
 
-        /* Page Header - Matches About Page */
+        /* Page Header - Matches About, Portfolio & Contact */
         header {
             background: #b78727;
             text-align: center;
@@ -72,7 +72,7 @@
             justify-content: center;
         }
 
-        /* Welcome Card - Matches About Profile Card */
+        /* Welcome Card */
         .home-card {
             width: 100%;
             background: #ffffff;
@@ -86,14 +86,22 @@
         .home-card h2 {
             font-size: 32px;
             color: #b78727;
+            margin-bottom: 12px;
+        }
+
+        .home-card .tagline {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c2518;
             margin-bottom: 16px;
         }
 
-        .home-card p {
-            font-size: 20px;
+        .home-card .bio {
+            font-size: 18px;
             color: #444444;
             line-height: 1.6;
-            margin-bottom: 28px;
+            max-width: 650px;
+            margin: 0 auto 30px auto;
         }
 
         .btn-group {
@@ -121,7 +129,7 @@
             color: #ffffff;
         }
 
-        /* Footer - Matches About Page */
+        /* Footer - Matches About, Portfolio & Contact */
         footer {
             background-color: #fcc200;
             color: #ffffff;
@@ -168,7 +176,10 @@
     <div class="container">
         <div class="home-card">
             <h2>Welcome to yori.Homes</h2>
-            <p>On my way home</p>
+            <p class="tagline">On my way home</p>
+            <p class="bio">
+                Hi! I'm Vince, a Grade 12 ICT Programming student who enjoys building websites—and when I'm taking a break from coding, I love watching Marvel movies!
+            </p>
             <div class="btn-group">
                 <a href="about.html" class="btn">About Me</a>
                 <a href="portfolio.html" class="btn">View Portfolio</a>
