@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SortVerse — Drag &amp; Drop Sorting Game</title>
+  <!-- Load Google Font: Outfit & Plus Jakarta Sans for clean game typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <!-- Tailwind CSS for responsive layout & utility classes -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['Outfit', 'sans-serif'],
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+          },
+          keyframes: {
+            shake: {
+              '0%, 100%': { transform: 'translateX(0)' },
+              '20%': { transform: 'translateX(-8px) rotate(-2deg)' },
+              '40%': { transform: 'translateX(8px) rotate(2deg)' },
+              '60%': { transform: 'translateX(-6px) rotate(-1deg)' },
+              '80%': { transform: 'translateX(6px) rotate(1deg)' },
+            },
+            popIn: {
+              '0%': { transform: 'scale(0.82)', opacity: '0' },
+              '70%': { transform: 'scale(1.05)', opacity: '1' },
+              '100%': { transform: 'scale(1)', opacity: '1' },
+            },
+            floatSlow: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-6px)' },
+            },
+            pulseGlow: {
+              '0%, 100%': { boxShadow: '0 0 0 0 rgba(56, 189, 248, 0.45)' },
+              '50%': { boxShadow: '0 0 0 12px rgba(56, 189, 248, 0)' },
+            }
+          },
+          animation: {
+            shake: 'shake 0.42s cubic-bezier(0.36, 0.07, 0.19, 0.97) both',
+            popIn: 'popIn 0.34s cubic-bezier(0.22, 1, 0.36, 1) forwards',
+            floatSlow: 'floatSlow 3.4s ease-in-out infinite',
+            pulseGlow: 'pulseGlow 1.5s infinite',
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    /* Custom visual polish & theme variables */
+    :root {
+      --bg-grad-1: #090d16;
+      --bg-grad-2: #111b33;
+      --accent-primary: #38bdf8;
+      --accent-secondary: #818cf8;
+      --card-bg: rgba(17, 26, 46, 0.78);
+      --card-border: rgba(148, 163, 184, 0.16);
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: radial-gradient(circle at 15% 15%, var(--bg-grad-2) 0%, var(--bg-grad-1) 65%, #05070d 100%);
+      color: #f8fafc;
+      min-height: 100vh;
+      overflow-x: hidden;
+      transition: background 0.5s ease;
+    }
+
+    /* Ambient subtle grid/dot overlay */
+    .ambient-grid {
+      background-image: radial-gradient(rgba(148, 163, 184, 0.12) 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+
+    /* Draggable tile styling with tactile depth */
+    .draggable-tile {
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
+      cursor: grab;
+      transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+      will-change: transform;
+    }
+
+    .draggable-tile:hover:not(.dragging):not(.matched) {
+      transform: translateY(-3px) scale(1.02);
+      border-color: rgba(255, 255, 255, 0.35);
+      box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.55);
+    }
+
+    .draggable-tile.dragging {
+      cursor: grabbing;
+      position: fixed;
+      z-index: 90;
+      pointer-events: none;
+      transform: scale(1.08) rotate(2deg);
+      box-shadow: 0 24px 44px -10px rgba(0, 0, 0, 0.75), 0 0 0 2px var(--accent-primary);
+      transition: none;
+    }
+
+    /* Placeholder left behind in the dock while dragging */
+    .tile-placeholder {
+      border: 2px dashed rgba(148, 163, 184, 0.25);
+      background: rgba(15, 23, 42, 0.35);
+      border-radius: 1rem;
+    }
+
+    /* Target drop zone states */
+    .drop-zone {
+      transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .drop-zone.drag-over {
+      transform: scale(1.025);
+      border-color: var(--accent-primary) !important;
+      background-color: rgba(56, 189, 248, 0.12) !important;
+      box-shadow: 0 0 28px -4px rgba(56, 189, 248, 0.4);
+    }
+
+    .drop-zone.hint-highlight {
+      border-color: #fbbf24 !important;
+      box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.25), 0 12px 24px -6px rgba(251, 191, 36, 0.35);
+    }
+
+    .draggable-tile.hint-highlight {
+      border-color: #fbbf24 !important;
+      box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.3), 0 12px 24px -6px rgba(251, 191, 36, 0.4);
+    }
+
+    /* Tactile 3D-ish game button */
+    .btn-game {
+      transition: transform 0.14s ease, box-shadow 0.14s ease, filter 0.14s ease;
+    }
+    .btn-game:active:not(:disabled) {
+      transform: translateY(2px) scale(0.98);
+    }
+
+    /* Confetti particle */
+    .confetti-piece {
+      position: fixed;
+      top: -16px;
+      z-index: 120;
+      pointer-events: none;
+      border-radius: 3px;
+      animation: confettiFall var(--fall-duration, 2.2s) cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+
+    @keyframes confettiFall {
+      0% {
+        transform: translate3d(0, 0, 0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translate3d(var(--drift-x, 40px), 105vh, 0) rotate(var(--spin, 540deg));
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body class="ambient-grid selection:bg-sky-400/30 selection:text-sky-200">
+
+  <!-- Top Navigation & Game Controls -->
+  <header class="sticky top-0 z-40 backdrop-blur-xl bg-slate-950/75 border-b border-slate-800/80">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
+      <!-- Brand Title -->
+      <div class="flex items-center gap-3">
+        <div id="brandBadge" class="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-400 to-indigo-600 flex items-center justify-center shadow-lg shadow-sky-500/20 text-xl font-bold">
+          ✦
+        </div>
+        <div>
+          <h1 class="font-display text-xl sm:text-2xl font-extrabold tracking-tight leading-none text-white">
+            Sort<span class="text-sky-400">Verse</span>
+          </h1>
+          <p id="themeSubtitle" class="text-xs text-slate-400 mt-0.5">Precision Drag &amp; Drop Sorting</p>
+        </div>
+      </div>
+
+      <!-- HUD Stats: Score, Combo, Timer -->
+      <div class="flex items-center gap-2 sm:gap-3 order-3 sm:order-2 w-full sm:w-auto justify-between sm:justify-center bg-slate-900/90 border border-slate-800 rounded-2xl px-3 py-1.5">
+        <div class="px-2">
+          <div class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Score</div>
+          <div id="scoreDisplay" class="font-display text-base sm:text-lg font-bold text-white tabular-nums">0</div>
+        </div>
+        <div class="h-7 w-px bg-slate-800"></div>
+        <div class="px-2">
+          <div class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Combo</div>
+          <div id="comboDisplay" class="font-display text-base sm:text-lg font-bold text-amber-400 tabular-nums">1x</div>
+        </div>
+        <div class="h-7 w-px bg-slate-800"></div>
+        <div class="px-2">
+          <div class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Time</div>
+          <div id="timerDisplay" class="font-display text-base sm:text-lg font-bold text-emerald-400 tabular-nums">00:00</div>
+        </div>
+      </div>
+
+      <!-- Utility Actions: Hint, Sound Toggle, Restart -->
+      <div class="flex items-center gap-2 order-2 sm:order-3">
+        <button
+          id="hintBtn"
+          type="button"
+          title="Highlight a matching pair (costs 50 pts)"
+          class="btn-game flex items-center gap-1.5 px-3 py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-400/30 text-xs sm:text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-amber-400"
+        >
+          <span>💡</span>
+          <span>Hint</span>
+          <span id="hintCountBadge" class="ml-0.5 px-1.5 py-0.2 rounded-full bg-amber-400/20 text-[11px] font-bold">3</span>
+        </button>
+
+        <button
+          id="soundBtn"
+          type="button"
+          aria-label="Toggle sound effects"
+          title="Toggle sound effects"
+          class="btn-game p-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 text-slate-200 border border-slate-700/70 focus:outline-none focus:ring-2 focus:ring-sky-400"
+        >
+          <span id="soundIcon" class="text-base leading-none block">🔊</span>
+        </button>
+
+        <button
+          id="restartBtn"
+          type="button"
+          title="Restart round"
+          class="btn-game px-3 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 text-slate-200 border border-slate-700/70 text-xs sm:text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-sky-400"
+        >
+          ↻ Reset
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 py-5 sm:py-7 space-y-5">
+
+    <!-- Configuration Bar: Theme & Difficulty Selector + Progress -->
+    <section aria-label="Game settings and progress" class="bg-slate-900/65 backdrop-blur-md border border-slate-800/80 rounded-2xl p-3.5 sm:p-4 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+      <div class="flex flex-wrap items-center gap-3">
+        <!-- Theme Selector -->
+        <div class="flex flex-wrap items-center gap-1.5 bg-slate-950/70 p-1 rounded-xl border border-slate-800/90" role="group" aria-label="Select Theme">
+          <button data-theme="space" class="theme-btn px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all">
+            🪐 Space
+          </button>
+          <button data-theme="ocean" class="theme-btn px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all">
+            🌊 Ocean
+          </button>
+          <button data-theme="culinary" class="theme-btn px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all">
+            🍳 Culinary
+          </button>
+        </div>
+
+        <!-- Difficulty Selector -->
+        <div class="flex items-center gap-1.5 bg-slate-950/70 p-1 rounded-xl border border-slate-800/90" role="group" aria-label="Select Difficulty">
+          <button data-difficulty="easy" class="diff-btn px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all">
+            Casual
+          </button>
+          <button data-difficulty="medium" class="diff-btn px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all">
+            Explorer
+          </button>
+          <button data-difficulty="hard" class="diff-btn px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all">
+            Master
+          </button>
+        </div>
+      </div>
+
+      <!-- Progress Bar -->
+      <div class="flex-1 max-w-md w-full">
+        <div class="flex items-center justify-between text-xs font-medium text-slate-300 mb-1.5">
+          <span id="statusBanner">Drag items into their matching category zone</span>
+          <span id="progressText" class="font-display font-bold text-sky-400 tabular-nums">0 / 6</span>
+        </div>
+        <div class="h-2.5 w-full bg-slate-800/90 rounded-full overflow-hidden border border-slate-700/50">
+          <div id="progressBar" class="h-full w-0 rounded-full bg-gradient-to-r from-sky-400 via-indigo-400 to-emerald-400 transition-all duration-300 ease-out"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Non-intrusive Feedback Toast -->
+    <div id="feedbackToast" aria-live="polite" class="min-h-[28px] flex items-center justify-center">
+      <div id="feedbackPill" class="opacity-0 transition-opacity duration-200 inline-flex items-center gap-2 px-4 py-1 rounded-full text-xs sm:text-sm font-semibold bg-slate-800/90 border border-slate-700 text-slate-200">
+        <span id="feedbackIcon">✨</span>
+        <span id="feedbackText">Ready to sort!</span>
+      </div>
+    </div>
+
+    <!-- Interactive Board: Target Drop Zones (Top/Main) & Draggable Item Dock (Bottom) -->
+    <div class="grid grid-cols-1 gap-6">
+
+      <!-- Target Category Zones -->
+      <section aria-label="Target Sorting Zones">
+        <div class="flex items-center justify-between mb-2.5 px-1">
+          <h2 class="font-display text-sm uppercase tracking-wider font-bold text-slate-400">
+            Target Zones
+          </h2>
+          <span class="text-xs text-slate-500 hidden sm:inline">Tip: You can also click an item, then click a zone</span>
+        </div>
+        <div id="dropZonesContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <!-- Populated dynamically by JS -->
+        </div>
+      </section>
+
+      <!-- Draggable Items Dock -->
+      <section aria-label="Draggable Items Dock" class="bg-slate-900/55 backdrop-blur-md border border-slate-800/80 rounded-3xl p-4 sm:p-5">
+        <div class="flex items-center justify-between mb-3 px-1">
+          <div class="flex items-center gap-2">
+            <h2 class="font-display text-sm uppercase tracking-wider font-bold text-slate-300">
+              Item Tray
+            </h2>
+            <span id="remainingCountPill" class="px-2 py-0.5 text-xs font-bold rounded-full bg-sky-500/15 text-sky-300 border border-sky-400/25">
+              6 left
+            </span>
+          </div>
+          <span class="text-xs text-slate-400">Drag &amp; drop onto a matching zone</span>
+        </div>
+
+        <div id="itemsDock" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 min-h-[116px]">
+          <!-- Populated dynamically by JS -->
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Victory / Round Complete Modal -->
+  <div id="winModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
+    <div class="animate-popIn max-w-md w-full bg-slate-900 border border-slate-700/80 rounded-3xl p-6 sm:p-7 shadow-2xl text-center relative overflow-hidden">
+      <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-amber-400/20 to-emerald-400/20 border border-amber-300/30 flex items-center justify-center text-4xl animate-floatSlow">
+        🏆
+      </div>
+      <h2 class="font-display text-2xl sm:text-3xl font-extrabold text-white">Sector Sorted!</h2>
+      <p id="winSummaryText" class="text-sm text-slate-300 mt-1.5">
+        Every single item found its rightful place.
+      </p>
+
+      <div class="grid grid-cols-3 gap-2.5 my-5 bg-slate-950/70 border border-slate-800 rounded-2xl p-3.5">
+        <div>
+          <div class="text-[11px] uppercase tracking-wider text-slate-400 font-semibold">Final Score</div>
+          <div id="finalScore" class="font-display text-xl font-extrabold text-sky-400 mt-0.5 tabular-nums">0</div>
+        </div>
+        <div class="border-x border-slate-800">
+          <div class="text-[11px] uppercase tracking-wider text-slate-400 font-semibold">Best Combo</div>
+          <div id="finalCombo" class="font-display text-xl font-extrabold text-amber-400 mt-0.5 tabular-nums">1x</div>
+        </div>
+        <div>
+          <div class="text-[11px] uppercase tracking-wider text-slate-400 font-semibold">Time</div>
+          <div id="finalTime" class="font-display text-xl font-extrabold text-emerald-400 mt-0.5 tabular-nums">00:00</div>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-2.5">
+        <button
+          id="playAgainBtn"
+          type="button"
+          class="btn-game flex-1 py-3 px-5 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-display font-bold text-sm sm:text-base shadow-lg shadow-sky-500/25 focus:outline-none focus:ring-2 focus:ring-sky-300"
+        >
+          Play Again
+        </button>
+        <button
+          id="nextThemeBtn"
+          type="button"
+          class="btn-game py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-slate-400"
+        >
+          Next Theme →
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /**
+     * =========================================================================
+     * SortVerse — Drag & Drop Sorting Game Engine
+     * Features:
+     *  - Pointer-based drag & drop (smooth across desktop mouse, trackpad, touch)
+     *  - Click-to-select + click-zone accessibility fallback
+     *  - 3 Themes (Space, Ocean, Culinary) x 3 Difficulties (Casual, Explorer, Master)
+     *  - Web Audio API synthesizer for tactile sounds (no external audio files)
+     *  - Combo multiplier, timer, hint system, confetti celebration, and restart modal
+     * =========================================================================
+     */
+
+    // --- 1. THEME & PUZZLE DATASET ---
+    const THEMES = {
+      space: {
+        name: 'Space & Cosmos',
+        subtitle: 'Categorize celestial wonders across the cosmos',
+        badge: '🪐',
+        bgGrad1: '#070b14',
+        bgGrad2: '#131c3a',
+        accentPrimary: '#38bdf8',
+        categories: [
+          { id: 'planets', title: 'Planets', subtitle: 'Orbital worlds', icon: '🌍', accent: 'sky' },
+          { id: 'stars_light', title: 'Stars & Light', subtitle: 'Luminous bodies', icon: '☀️', accent: 'amber' },
+          { id: 'craft_tech', title: 'Spacecraft & Gear', subtitle: 'Human exploration', icon: '🚀', accent: 'indigo' },
+        ],
+        items: [
+          // Easy (6 items: 2 per category)
+          { id: 'sp-1', label: 'Mars', icon: '🔴', category: 'planets', tier: 'easy' },
+          { id: 'sp-2', label: 'Saturn', icon: '🪐', category: 'planets', tier: 'easy' },
+          { id: 'sp-3', label: 'The Sun', icon: '☀️', category: 'stars_light', tier: 'easy' },
+          { id: 'sp-4', label: 'Supernova', icon: '💥', category: 'stars_light', tier: 'easy' },
+          { id: 'sp-5', label: 'Rover', icon: '🤖', category: 'craft_tech', tier: 'easy' },
+          { id: 'sp-6', label: 'Space Station', icon: '🛰️', category: 'craft_tech', tier: 'easy' },
+          // Medium (+3 items = 9 total)
+          { id: 'sp-7', label: 'Neptune', icon: '🔵', category: 'planets', tier: 'medium' },
+          { id: 'sp-8', label: 'Red Giant', icon: '🟠', category: 'stars_light', tier: 'medium' },
+          { id: 'sp-9', label: 'Space Shuttle', icon: '🚀', category: 'craft_tech', tier: 'medium' },
+          // Hard (+3 items = 12 total)
+          { id: 'sp-10', label: 'Jupiter', icon: '🟤', category: 'planets', tier: 'hard' },
+          { id: 'sp-11', label: 'Pulsar', icon: '✨', category: 'stars_light', tier: 'hard' },
+          { id: 'sp-12', label: 'Telescope', icon: '🔭', category: 'craft_tech', tier: 'hard' },
+        ]
+      },
+      ocean: {
+        name: 'Ocean & Marine Life',
+        subtitle: 'Sort sea creatures, reefs, and deep-sea vessels',
+        badge: '🌊',
+        bgGrad1: '#04121d',
+        bgGrad2: '#0b2d42',
+        accentPrimary: '#2dd4bf',
+        categories: [
+          { id: 'fish_sharks', title: 'Fish & Sharks', subtitle: 'Gilled swimmers', icon: '🐠', accent: 'cyan' },
+          { id: 'mammals_inverts', title: 'Whales & Inverts', subtitle: 'Cetaceans & jellies', icon: '🐋', accent: 'teal' },
+          { id: 'habitat_vessels', title: 'Reefs & Vessels', subtitle: 'Seabed & submersibles', icon: '🪸', accent: 'emerald' },
+        ],
+        items: [
+          // Easy (6 items)
+          { id: 'oc-1', label: 'Clownfish', icon: '🐠', category: 'fish_sharks', tier: 'easy' },
+          { id: 'oc-2', label: 'Great White', icon: '🦈', category: 'fish_sharks', tier: 'easy' },
+          { id: 'oc-3', label: 'Blue Whale', icon: '🐋', category: 'mammals_inverts', tier: 'easy' },
+          { id: 'oc-4', label: 'Jellyfish', icon: '🪼', category: 'mammals_inverts', tier: 'easy' },
+          { id: 'oc-5', label: 'Coral Reef', icon: '🪸', category: 'habitat_vessels', tier: 'easy' },
+          { id: 'oc-6', label: 'Submarine', icon: '🚤', category: 'habitat_vessels', tier: 'easy' },
+          // Medium (+3 items)
+          { id: 'oc-7', label: 'Pufferfish', icon: '🐡', category: 'fish_sharks', tier: 'medium' },
+          { id: 'oc-8', label: 'Octopus', icon: '🐙', category: 'mammals_inverts', tier: 'medium' },
+          { id: 'oc-9', label: 'Anchor', icon: '⚓', category: 'habitat_vessels', tier: 'medium' },
+          // Hard (+3 items)
+          { id: 'oc-10', label: 'Tropical Fish', icon: '🐟', category: 'fish_sharks', tier: 'hard' },
+          { id: 'oc-11', label: 'Dolphin', icon: '🐬', category: 'mammals_inverts', tier: 'hard' },
+          { id: 'oc-12', label: 'Seashell', icon: '🐚', category: 'habitat_vessels', tier: 'hard' },
+        ]
+      },
+      culinary: {
+        name: 'Culinary & Kitchen',
+        subtitle: 'Organize fresh produce, baked goods, and cookware',
+        badge: '🍳',
+        bgGrad1: '#160d08',
+        bgGrad2: '#331b0e',
+        accentPrimary: '#fb923c',
+        categories: [
+          { id: 'produce', title: 'Fruits & Veggies', subtitle: 'Fresh from the garden', icon: '🥑', accent: 'emerald' },
+          { id: 'bakery_treats', title: 'Bakery & Sweets', subtitle: 'Oven & patisserie', icon: '🥐', accent: 'amber' },
+          { id: 'kitchen_tools', title: 'Cookware & Prep', subtitle: 'Utensils & vessels', icon: '🍳', accent: 'rose' },
+        ],
+        items: [
+          // Easy (6 items)
+          { id: 'cu-1', label: 'Avocado', icon: '🥑', category: 'produce', tier: 'easy' },
+          { id: 'cu-2', label: 'Strawberry', icon: '🍓', category: 'produce', tier: 'easy' },
+          { id: 'cu-3', label: 'Croissant', icon: '🥐', category: 'bakery_treats', tier: 'easy' },
+          { id: 'cu-4', label: 'Cupcake', icon: '🧁', category: 'bakery_treats', tier: 'easy' },
+          { id: 'cu-5', label: 'Frying Pan', icon: '🍳', category: 'kitchen_tools', tier: 'easy' },
+          { id: 'cu-6', label: 'Chef Knife', icon: '🔪', category: 'kitchen_tools', tier: 'easy' },
+          // Medium (+3 items)
+          { id: 'cu-7', label: 'Broccoli', icon: '🥦', category: 'produce', tier: 'medium' },
+          { id: 'cu-8', label: 'Pretzel', icon: '🥨', category: 'bakery_treats', tier: 'medium' },
+          { id: 'cu-9', label: 'Spoon', icon: '🥄', category: 'kitchen_tools', tier: 'medium' },
+          // Hard (+3 items)
+          { id: 'cu-10', label: 'Corn Cob', icon: '🌽', category: 'produce', tier: 'hard' },
+          { id: 'cu-11', label: 'Donut', icon: '🍩', category: 'bakery_treats', tier: 'hard' },
+          { id: 'cu-12', label: 'Mixing Bowl', icon: '🥣', category: 'kitchen_tools', tier: 'hard' },
+        ]
+      }
+    };
+
+    const DIFFICULTIES = {
+      easy: { label: 'Casual', allowedTiers: ['easy'], pointsBase: 100, hints: 4 },
+      medium: { label: 'Explorer', allowedTiers: ['easy', 'medium'], pointsBase: 150, hints: 3 },
+      hard: { label: 'Master', allowedTiers: ['easy', 'medium', 'hard'], pointsBase: 200, hints: 2 },
+    };
+
+    // --- 2. WEB AUDIO API SOUND ENGINE ---
+    class SoundEngine {
+      constructor() {
+        this.ctx = null;
+        this.muted = false;
+      }
+
+      ensureContext() {
+        if (this.muted) return null;
+        if (!this.ctx) {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (AudioContextClass) {
+            this.ctx = new AudioContextClass();
+          }
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume().catch(() => {});
+        }
+        return this.ctx;
+      }
+
+      playPickup() {
+        const ctx = this.ensureContext();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(320, now);
+        osc.frequency.exponentialRampToValueAtTime(520, now + 0.08);
+        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.085);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.09);
+      }
+
+      playMatch(combo = 1) {
+        const ctx = this.ensureContext();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+        const pitchBoost = Math.min(combo - 1, 6) * 35;
+        const notes = [523.25 + pitchBoost, 659.25 + pitchBoost, 783.99 + pitchBoost]; // C5-E5-G5 rising
+
+        notes.forEach((freq, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          const start = now + idx * 0.065;
+          osc.frequency.setValueAtTime(freq, start);
+          gain.gain.setValueAtTime(0.14, start);
+          gain.gain.exponentialRampToValueAtTime(0.001, start + 0.22);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(start);
+          osc.stop(start + 0.23);
+        });
+      }
+
+      playWrong() {
+        const ctx = this.ensureContext();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(210, now);
+        osc.frequency.linearRampToValueAtTime(145, now + 0.22);
+        gain.gain.setValueAtTime(0.11, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.24);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.25);
+      }
+
+      playHint() {
+        const ctx = this.ensureContext();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+        [587.33, 880].forEach((freq, i) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, now + i * 0.08);
+          gain.gain.setValueAtTime(0.1, now + i * 0.08);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.08 + 0.18);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now + i * 0.08);
+          osc.stop(now + i * 0.08 + 0.19);
+        });
+      }
+
+      playWin() {
+        const ctx = this.ensureContext();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+        const chord = [523.25, 659.25, 783.99, 1046.5];
+        chord.forEach((freq, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          const start = now + idx * 0.09;
+          osc.frequency.setValueAtTime(freq, start);
+          gain.gain.setValueAtTime(0.16, start);
+          gain.gain.exponentialRampToValueAtTime(0.001, start + 0.45);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(start);
+          osc.stop(start + 0.46);
+        });
+      }
+    }
+
+    const sound = new SoundEngine();
+
+    // --- 3. GAME STATE ---
+    const state = {
+      themeKey: 'space',
+      difficultyKey: 'easy',
+      score: 0,
+      combo: 1,
+      bestCombo: 1,
+      hintsLeft: 4,
+      elapsedSeconds: 0,
+      timerInterval: null,
+      roundItems: [],
+      matchedItemIds: new Set(),
+      selectedItemId: null, // For click-to-sort accessibility
+      isCompleted: false,
+      drag: {
+        active: false,
+        itemId: null,
+        element: null,
+        placeholder: null,
+        offsetX: 0,
+        offsetY: 0,
+        hoveredZoneId: null,
+      }
+    };
+
+    // --- 4. DOM REFERENCES ---
+    const els = {
+      brandBadge: document.getElementById('brandBadge'),
+      themeSubtitle: document.getElementById('themeSubtitle'),
+      scoreDisplay: document.getElementById('scoreDisplay'),
+      comboDisplay: document.getElementById('comboDisplay'),
+      timerDisplay: document.getElementById('timerDisplay'),
+      hintBtn: document.getElementById('hintBtn'),
+      hintCountBadge: document.getElementById('hintCountBadge'),
+      soundBtn: document.getElementById('soundBtn'),
+      soundIcon: document.getElementById('soundIcon'),
+      restartBtn: document.getElementById('restartBtn'),
+      statusBanner: document.getElementById('statusBanner'),
+      progressText: document.getElementById('progressText'),
+      progressBar: document.getElementById('progressBar'),
+      feedbackPill: document.getElementById('feedbackPill'),
+      feedbackIcon: document.getElementById('feedbackIcon'),
+      feedbackText: document.getElementById('feedbackText'),
+      dropZonesContainer: document.getElementById('dropZonesContainer'),
+      itemsDock: document.getElementById('itemsDock'),
+      remainingCountPill: document.getElementById('remainingCountPill'),
+      winModal: document.getElementById('winModal'),
+      winSummaryText: document.getElementById('winSummaryText'),
+      finalScore: document.getElementById('finalScore'),
+      finalCombo: document.getElementById('finalCombo'),
+      finalTime: document.getElementById('finalTime'),
+      playAgainBtn: document.getElementById('playAgainBtn'),
+      nextThemeBtn: document.getElementById('nextThemeBtn'),
+    };
+
+    let feedbackTimeout = null;
+
+    // --- 5. UTILITY & FORMATTING FUNCTIONS ---
+    function shuffleArray(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function formatTime(totalSeconds) {
+      const mins = Math.floor(totalSeconds / 60);
+      const secs = totalSeconds % 60;
+      return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    }
+
+    function showFeedback(icon, text, tone = 'neutral') {
+      if (feedbackTimeout) clearTimeout(feedbackTimeout);
+
+      const toneClasses = {
+        neutral: 'bg-slate-800/95 border-slate-700 text-slate-200',
+        success: 'bg-emerald-950/90 border-emerald-500/50 text-emerald-200',
+        error: 'bg-rose-950/90 border-rose-500/50 text-rose-200',
+        hint: 'bg-amber-950/90 border-amber-400/50 text-amber-200',
+      };
+
+      els.feedbackPill.className = `opacity-100 transition-opacity duration-200 inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold border shadow-lg ${toneClasses[tone] || toneClasses.neutral}`;
+      els.feedbackIcon.textContent = icon;
+      els.feedbackText.textContent = text;
+
+      feedbackTimeout = setTimeout(() => {
+        els.feedbackPill.classList.remove('opacity-100');
+        els.feedbackPill.classList.add('opacity-0');
+      }, 2200);
+    }
+
+    function spawnConfetti() {
+      const colors = ['#38bdf8', '#818cf8', '#34d399', '#fbbf24', '#fb7185', '#c084fc'];
+      const count = 48;
+
+      for (let i = 0; i < count; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'confetti-piece';
+        const left = Math.random() * 100;
+        const size = 7 + Math.random() * 8;
+        const duration = 1.6 + Math.random() * 1.4;
+        const driftX = (Math.random() - 0.5) * 180;
+        const spin = (Math.random() > 0.5 ? 1 : -1) * (360 + Math.random() * 540);
+        const color = colors[i % colors.length];
+
+        piece.style.left = `${left}vw`;
+        piece.style.width = `${size}px`;
+        piece.style.height = `${size * 0.7}px`;
+        piece.style.backgroundColor = color;
+        piece.style.setProperty('--fall-duration', `${duration}s`);
+        piece.style.setProperty('--drift-x', `${driftX}px`);
+        piece.style.setProperty('--spin', `${spin}deg`);
+
+        document.body.appendChild(piece);
+        setTimeout(() => piece.remove(), (duration + 0.2) * 1000);
+      }
+    }
+
+    // --- 6. TIMER & HUD UPDATES ---
+    function startTimer() {
+      stopTimer();
+      state.timerInterval = setInterval(() => {
+        if (!state.isCompleted) {
+          state.elapsedSeconds += 1;
+          els.timerDisplay.textContent = formatTime(state.elapsedSeconds);
+        }
+      }, 1000);
+    }
+
+    function stopTimer() {
+      if (state.timerInterval) {
+        clearInterval(state.timerInterval);
+        state.timerInterval = null;
+      }
+    }
+
+    function updateHud() {
+      const total = state.roundItems.length;
+      const matched = state.matchedItemIds.size;
+      const remaining = total - matched;
+
+      els.scoreDisplay.textContent = state.score.toLocaleString();
+      els.comboDisplay.textContent = `${state.combo}x`;
+      els.timerDisplay.textContent = formatTime(state.elapsedSeconds);
+      els.progressText.textContent = `${matched} / ${total}`;
+      els.remainingCountPill.textContent = `${remaining} left`;
+      els.hintCountBadge.textContent = state.hintsLeft;
+      els.hintBtn.disabled = state.hintsLeft <= 0 || remaining === 0 || state.isCompleted;
+      els.hintBtn.classList.toggle('opacity-50', els.hintBtn.disabled);
+      els.hintBtn.classList.toggle('cursor-not-allowed', els.hintBtn.disabled);
+
+      const pct = total > 0 ? Math.round((matched / total) * 100) : 0;
+      els.progressBar.style.width = `${pct}%`;
+    }
+
+    function applyThemeVisuals() {
+      const theme = THEMES[state.themeKey];
+      document.documentElement.style.setProperty('--bg-grad-1', theme.bgGrad1);
+      document.documentElement.style.setProperty('--bg-grad-2', theme.bgGrad2);
+      document.documentElement.style.setProperty('--accent-primary', theme.accentPrimary);
+
+      els.brandBadge.textContent = theme.badge;
+      els.themeSubtitle.textContent = `${theme.name} — ${theme.subtitle}`;
+
+      // Highlight active theme button
+      document.querySelectorAll('.theme-btn').forEach((btn) => {
+        const active = btn.dataset.theme === state.themeKey;
+        btn.className = active
+          ? 'theme-btn px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold bg-sky-500 text-slate-950 shadow-sm transition-all'
+          : 'theme-btn px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800/70 transition-all';
+      });
+
+      // Highlight active difficulty button
+      document.querySelectorAll('.diff-btn').forEach((btn) => {
+        const active = btn.dataset.difficulty === state.difficultyKey;
+        btn.className = active
+          ? 'diff-btn px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold bg-indigo-500 text-white shadow-sm transition-all'
+          : 'diff-btn px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800/70 transition-all';
+      });
+    }
+
+    // --- 7. BOARD RENDERING ---
+    function renderBoard() {
+      const theme = THEMES[state.themeKey];
+      applyThemeVisuals();
+
+      // Clear previous zones & dock
+      els.dropZonesContainer.innerHTML = '';
+      els.itemsDock.innerHTML = '';
+
+      // Render Target Zones
+      theme.categories.forEach((cat) => {
+        const zone = document.createElement('div');
+        zone.id = `zone-${cat.id}`;
+        zone.dataset.categoryId = cat.id;
+        zone.tabIndex = 0;
+        zone.setAttribute('role', 'region');
+        zone.setAttribute('aria-label', `${cat.title} drop zone`);
+        zone.className =
+          'drop-zone rounded-2xl bg-slate-900/70 backdrop-blur-md border-2 border-dashed border-slate-700/80 p-4 flex flex-col justify-between min-h-[165px] focus:outline-none focus:border-sky-400';
+
+        zone.innerHTML = `
+          <div class="flex items-start justify-between gap-2 pb-3 border-b border-slate-800/80">
+            <div class="flex items-center gap-2.5">
+              <span class="w-10 h-10 rounded-xl bg-slate-800/90 border border-slate-700/70 flex items-center justify-center text-xl shadow-inner">
+                ${cat.icon}
+              </span>
+              <div>
+                <h3 class="font-display font-bold text-base text-white leading-tight">${cat.title}</h3>
+                <p class="text-xs text-slate-400">${cat.subtitle}</p>
+              </div>
+            </div>
+            <span class="zone-count px-2 py-0.5 rounded-full text-xs font-bold bg-slate-800 text-slate-300 tabular-nums">
+              0
+            </span>
+          </div>
+          <div class="zone-matched-list flex flex-wrap gap-2 pt-3 min-h-[54px] items-center">
+            <span class="zone-empty-hint text-xs text-slate-500 italic">Drop ${cat.title.toLowerCase()} here</span>
+          </div>
+        `;
+
+        // Accessibility: click zone when an item is selected via click
+        zone.addEventListener('click', () => {
+          if (state.selectedItemId && !state.isCompleted) {
+            attemptMatch(state.selectedItemId, cat.id);
+          }
+        });
+
+        zone.addEventListener('keydown', (e) => {
+          if ((e.key === 'Enter' || e.key === ' ') && state.selectedItemId && !state.isCompleted) {
+            e.preventDefault();
+            attemptMatch(state.selectedItemId, cat.id);
+          }
+        });
+
+        els.dropZonesContainer.appendChild(zone);
+      });
+
+      // Render Draggable Tiles in Dock
+      state.roundItems.forEach((item) => {
+        const tile = createItemTile(item);
+        els.itemsDock.appendChild(tile);
+      });
+
+      updateHud();
+    }
+
+    function createItemTile(item) {
+      const tile = document.createElement('div');
+      tile.id = `tile-${item.id}`;
+      tile.dataset.itemId = item.id;
+      tile.tabIndex = 0;
+      tile.setAttribute('role', 'button');
+      tile.setAttribute('aria-label', `Draggable item: ${item.label}`);
+      tile.className =
+        'draggable-tile rounded-2xl bg-slate-800/90 border border-slate-700/80 p-3 flex flex-col items-center justify-center text-center gap-1.5 shadow-md focus:outline-none focus:ring-2 focus:ring-sky-400';
+
+      tile.innerHTML = `
+        <span class="text-2xl sm:text-3xl leading-none pointer-events-none">${item.icon}</span>
+        <span class="text-xs sm:text-sm font-semibold text-slate-100 leading-snug pointer-events-none">${item.label}</span>
+      `;
+
+      // Pointer drag start (supports mouse, touch, and stylus uniformly)
+      tile.addEventListener('pointerdown', (e) => handlePointerDown(e, item, tile));
+
+      // Keyboard / click selection fallback for accessibility
+      tile.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          toggleSelectItem(item.id, tile);
+        }
+      });
+
+      return tile;
+    }
+
+    function toggleSelectItem(itemId, tileEl) {
+      if (state.matchedItemIds.has(itemId) || state.isCompleted) return;
+
+      document.querySelectorAll('.draggable-tile.selected-item').forEach((el) => {
+        el.classList.remove('selected-item', 'ring-2', 'ring-sky-400', 'bg-sky-950/60');
+      });
+
+      if (state.selectedItemId === itemId) {
+        state.selectedItemId = null;
+        els.statusBanner.textContent = 'Drag items into their matching category zone';
+      } else {
+        state.selectedItemId = itemId;
+        tileEl.classList.add('selected-item', 'ring-2', 'ring-sky-400', 'bg-sky-950/60');
+        const found = state.roundItems.find((i) => i.id === itemId);
+        els.statusBanner.textContent = `Selected "${found?.label}" — click a target zone`;
+      }
+    }
+
+    // --- 8. SMOOTH POINTER DRAG & DROP ENGINE ---
+    function handlePointerDown(e, item, tile) {
+      if (state.matchedItemIds.has(item.id) || state.isCompleted) return;
+      // Only primary mouse button or touch/pen
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+
+      e.preventDefault();
+      sound.playPickup();
+
+      // Clear any click selection
+      state.selectedItemId = null;
+      document.querySelectorAll('.draggable-tile.selected-item').forEach((el) => {
+        el.classList.remove('selected-item', 'ring-2', 'ring-sky-400', 'bg-sky-950/60');
+      });
+
+      const rect = tile.getBoundingClientRect();
+
+      // Create placeholder so dock layout doesn't jump while item becomes fixed
+      const placeholder = document.createElement('div');
+      placeholder.className = 'tile-placeholder';
+      placeholder.style.width = `${rect.width}px`;
+      placeholder.style.height = `${rect.height}px`;
+      tile.parentNode.insertBefore(placeholder, tile);
+
+      // Lock fixed dimensions during drag
+      tile.style.width = `${rect.width}px`;
+      tile.style.height = `${rect.height}px`;
+      tile.style.left = `${rect.left}px`;
+      tile.style.top = `${rect.top}px`;
+      tile.classList.add('dragging');
+      document.body.appendChild(tile);
+
+      state.drag = {
+        active: true,
+        itemId: item.id,
+        element: tile,
+        placeholder,
+        offsetX: e.clientX - rect.left,
+        offsetY: e.clientY - rect.top,
+        hoveredZoneId: null,
+        pointerId: e.pointerId,
+        moved: false,
+      };
+
+      try {
+        tile.setPointerCapture(e.pointerId);
+      } catch (_) {
+        // Ignore if pointer capture isn't supported on synthetic events
+      }
+    }
+
+    function handlePointerMove(e) {
+      if (!state.drag.active) return;
+      if (state.drag.pointerId !== undefined && e.pointerId !== state.drag.pointerId) return;
+
+      state.drag.moved = true;
+      const x = e.clientX - state.drag.offsetX;
+      const y = e.clientY - state.drag.offsetY;
+
+      state.drag.element.style.left = `${x}px`;
+      state.drag.element.style.top = `${y}px`;
+
+      // Detect which drop zone is beneath the pointer
+      const targetZone = findDropZoneAtPoint(e.clientX, e.clientY);
+      const nextZoneId = targetZone ? targetZone.dataset.categoryId : null;
+
+      if (nextZoneId !== state.drag.hoveredZoneId) {
+        if (state.drag.hoveredZoneId) {
+          const prevZone = document.getElementById(`zone-${state.drag.hoveredZoneId}`);
+          if (prevZone) prevZone.classList.remove('drag-over');
+        }
+        if (targetZone) {
+          targetZone.classList.add('drag-over');
+        }
+        state.drag.hoveredZoneId = nextZoneId;
+      }
+    }
+
+    function handlePointerUp(e) {
+      if (!state.drag.active) return;
+      if (state.drag.pointerId !== undefined && e.pointerId !== state.drag.pointerId) return;
+
+      const { itemId, element, placeholder, hoveredZoneId, moved } = state.drag;
+
+      // Clean up zone hover highlight
+      if (hoveredZoneId) {
+        const zoneEl = document.getElementById(`zone-${hoveredZoneId}`);
+        if (zoneEl) zoneEl.classList.remove('drag-over');
+      }
+
+      // Restore element from fixed drag state
+      element.classList.remove('dragging');
+      element.style.position = '';
+      element.style.left = '';
+      element.style.top = '';
+      element.style.width = '';
+      element.style.height = '';
+      element.style.zIndex = '';
+
+      if (placeholder && placeholder.parentNode) {
+        placeholder.parentNode.replaceChild(element, placeholder);
+      }
+
+      // Reset drag state before evaluating match
+      state.drag = {
+        active: false,
+        itemId: null,
+        element: null,
+        placeholder: null,
+        offsetX: 0,
+        offsetY: 0,
+        hoveredZoneId: null,
+        pointerId: null,
+        moved: false,
+      };
+
+      if (hoveredZoneId) {
+        attemptMatch(itemId, hoveredZoneId);
+      } else if (!moved) {
+        // Treat simple tap/click without movement as selection for click-to-zone accessibility
+        toggleSelectItem(itemId, element);
+      }
+    }
+
+    function findDropZoneAtPoint(clientX, clientY) {
+      const zones = document.querySelectorAll('.drop-zone');
+      for (const zone of zones) {
+        const rect = zone.getBoundingClientRect();
+        if (
+          clientX >= rect.left &&
+          clientX <= rect.right &&
+          clientY >= rect.top &&
+          clientY <= rect.bottom
+        ) {
+          return zone;
+        }
+      }
+      return null;
+    }
+
+    window.addEventListener('pointermove', handlePointerMove, { passive: true });
+    window.addEventListener('pointerup', handlePointerUp);
+    window.addEventListener('pointercancel', handlePointerUp);
+
+    // --- 9. MATCH EVALUATION, SCORING & WIN LOGIC ---
+    function attemptMatch(itemId, targetCategoryId) {
+      if (state.matchedItemIds.has(itemId) || state.isCompleted) return;
+
+      const item = state.roundItems.find((i) => i.id === itemId);
+      const zoneEl = document.getElementById(`zone-${targetCategoryId}`);
+      const tileEl = document.getElementById(`tile-${itemId}`);
+      const theme = THEMES[state.themeKey];
+      const targetCategory = theme.categories.find((c) => c.id === targetCategoryId);
+
+      clearHints();
+
+      if (!item || !zoneEl || !tileEl) return;
+
+      if (item.category === targetCategoryId) {
+        // --- CORRECT MATCH ---
+        state.matchedItemIds.add(itemId);
+        state.selectedItemId = null;
+        els.statusBanner.textContent = 'Drag items into their matching category zone';
+
+        const diffConfig = DIFFICULTIES[state.difficultyKey];
+        const earned = diffConfig.pointsBase * state.combo;
+        state.score += earned;
+        state.combo += 1;
+        if (state.combo > state.bestCombo) {
+          state.bestCombo = state.combo;
+        }
+
+        sound.playMatch(state.combo - 1);
+        showFeedback(
+          '✅',
+          `${item.label} → ${targetCategory.title} (+${earned} pts)`,
+          'success'
+        );
+
+        // Move compact matched badge into the target zone
+        tileEl.remove();
+        const listEl = zoneEl.querySelector('.zone-matched-list');
+        const emptyHint = listEl.querySelector('.zone-empty-hint');
+        if (emptyHint) emptyHint.remove();
+
+        const chip = document.createElement('div');
+        chip.className =
+          'animate-popIn inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-emerald-500/15 border border-emerald-400/35 text-emerald-100 text-xs font-semibold shadow-sm';
+        chip.innerHTML = `<span>${item.icon}</span><span>${item.label}</span>`;
+        listEl.appendChild(chip);
+
+        // Update zone counter badge
+        const countBadge = zoneEl.querySelector('.zone-count');
+        const currentZoneCount = listEl.querySelectorAll('div').length;
+        if (countBadge) {
+          countBadge.textContent = currentZoneCount;
+          countBadge.className =
+            'zone-count px-2 py-0.5 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 tabular-nums';
+        }
+
+        updateHud();
+
+        // Check if all items are matched
+        if (state.matchedItemIds.size === state.roundItems.length) {
+          handleRoundWin();
+        }
+      } else {
+        // --- INCORRECT DROP ---
+        state.combo = 1;
+        state.score = Math.max(0, state.score - 25);
+        sound.playWrong();
+
+        showFeedback(
+          '❌',
+          `${item.label} doesn't belong in ${targetCategory.title} (Combo reset)`,
+          'error'
+        );
+
+        // Shake tile and briefly flash zone border
+        tileEl.classList.remove('animate-shake');
+        void tileEl.offsetWidth; // trigger reflow
+        tileEl.classList.add('animate-shake');
+
+        zoneEl.classList.add('border-rose-500/80', 'bg-rose-950/30');
+        setTimeout(() => {
+          tileEl.classList.remove('animate-shake');
+          zoneEl.classList.remove('border-rose-500/80', 'bg-rose-950/30');
+        }, 460);
+
+        updateHud();
+      }
+    }
+
+    function handleRoundWin() {
+      state.isCompleted = true;
+      stopTimer();
+
+      // Time bonus: faster completion awards extra points
+      const timeBonus = Math.max(0, (120 - state.elapsedSeconds) * 5);
+      state.score += timeBonus;
+      updateHud();
+
+      sound.playWin();
+      spawnConfetti();
+
+      setTimeout(() => {
+        els.finalScore.textContent = state.score.toLocaleString();
+        els.finalCombo.textContent = `${state.bestCombo}x`;
+        els.finalTime.textContent = formatTime(state.elapsedSeconds);
+        els.winSummaryText.textContent = `Completed ${THEMES[state.themeKey].name} (${DIFFICULTIES[state.difficultyKey].label}) with a +${timeBonus} time bonus!`;
+        els.winModal.classList.remove('hidden');
+        els.winModal.classList.add('flex');
+      }, 450);
+    }
+
+    // --- 10. HINT SYSTEM ---
+    function clearHints() {
+      document.querySelectorAll('.hint-highlight').forEach((el) => {
+        el.classList.remove('hint-highlight');
+      });
+    }
+
+    function useHint() {
+      if (state.hintsLeft <= 0 || state.isCompleted) return;
+
+      const unmatched = state.roundItems.filter((item) => !state.matchedItemIds.has(item.id));
+      if (unmatched.length === 0) return;
+
+      // Prefer selected item if any, otherwise first unmatched item
+      const targetItem =
+        (state.selectedItemId && unmatched.find((i) => i.id === state.selectedItemId)) ||
+        unmatched[0];
+
+      const tileEl = document.getElementById(`tile-${targetItem.id}`);
+      const zoneEl = document.getElementById(`zone-${targetItem.category}`);
+
+      clearHints();
+      if (tileEl) tileEl.classList.add('hint-highlight');
+      if (zoneEl) zoneEl.classList.add('hint-highlight');
+
+      state.hintsLeft -= 1;
+      state.score = Math.max(0, state.score - 50);
+      sound.playHint();
+
+      const catObj = THEMES[state.themeKey].categories.find((c) => c.id === targetItem.category);
+      showFeedback(
+        '💡',
+        `Hint: Drag "${targetItem.label}" into ${catObj ? catObj.title : 'the highlighted zone'} (-50 pts)`,
+        'hint'
+      );
+
+      updateHud();
+    }
+
+    // --- 11. ROUND INITIALIZATION & CONTROLS ---
+    function startNewRound({ resetScore = true } = {}) {
+      const theme = THEMES[state.themeKey];
+      const diff = DIFFICULTIES[state.difficultyKey];
+
+      els.winModal.classList.add('hidden');
+      els.winModal.classList.remove('flex');
+      clearHints();
+
+      if (resetScore) {
+        state.score = 0;
+        state.combo = 1;
+        state.bestCombo = 1;
+        state.elapsedSeconds = 0;
+      }
+
+      state.hintsLeft = diff.hints;
+      state.matchedItemIds = new Set();
+      state.selectedItemId = null;
+      state.isCompleted = false;
+      state.roundItems = shuffleArray(
+        theme.items.filter((item) => diff.allowedTiers.includes(item.tier))
+      );
+
+      els.statusBanner.textContent = 'Drag items into their matching category zone';
+      renderBoard();
+      startTimer();
+    }
+
+    // Theme button listeners
+    document.querySelectorAll('.theme-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const nextTheme = btn.dataset.theme;
+        if (nextTheme && THEMES[nextTheme] && nextTheme !== state.themeKey) {
+          state.themeKey = nextTheme;
+          startNewRound({ resetScore: true });
+          showFeedback(THEMES[nextTheme].badge, `Switched to ${THEMES[nextTheme].name}`, 'neutral');
+        }
+      });
+    });
+
+    // Difficulty button listeners
+    document.querySelectorAll('.diff-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const nextDiff = btn.dataset.difficulty;
+        if (nextDiff && DIFFICULTIES[nextDiff] && nextDiff !== state.difficultyKey) {
+          state.difficultyKey = nextDiff;
+          startNewRound({ resetScore: true });
+          showFeedback('🎯', `Difficulty set to ${DIFFICULTIES[nextDiff].label}`, 'neutral');
+        }
+      });
+    });
+
+    // Utility & modal buttons
+    els.hintBtn.addEventListener('click', useHint);
+
+    els.soundBtn.addEventListener('click', () => {
+      sound.muted = !sound.muted;
+      els.soundIcon.textContent = sound.muted ? '🔇' : '🔊';
+      if (!sound.muted) {
+        sound.playPickup();
+        showFeedback('🔊', 'Sound effects enabled', 'neutral');
+      } else {
+        showFeedback('🔇', 'Sound effects muted', 'neutral');
+      }
+    });
+
+    els.restartBtn.addEventListener('click', () => {
+      startNewRound({ resetScore: true });
+      showFeedback('↻', 'Round restarted!', 'neutral');
+    });
+
+    els.playAgainBtn.addEventListener('click', () => {
+      startNewRound({ resetScore: true });
+    });
+
+    els.nextThemeBtn.addEventListener('click', () => {
+      const keys = Object.keys(THEMES);
+      const currentIdx = keys.indexOf(state.themeKey);
+      const nextKey = keys[(currentIdx + 1) % keys.length];
+      state.themeKey = nextKey;
+      startNewRound({ resetScore: true });
+    });
+
+    // Boot initial round
+    startNewRound({ resetScore: true });
+  </script>
+</body>
+</html>
