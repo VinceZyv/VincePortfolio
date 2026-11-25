@@ -3,213 +3,333 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>yori.Homes</title>
+    <title>yori.Homes - Gallery</title>
+
     <style>
-        body { margin: 0; padding: 0; font-family: 'Times New Roman', Times, serif; text-align: center; }
-        nav { background-color: #fcc200; display: flex; justify-content: flex-start; padding: 0 20px; }
-        nav a { color: #ffffff; text-decoration: none; padding: 14px 20px; font-size: 16px; }
-        nav a:hover, nav a.active { background-color: #b78727; border-bottom: 3px solid #ffcc00; }
-        .container { max-width: 800px; margin: 60px auto 0 auto; padding: 20px; }
-        h1 { font-size: 36px; margin-bottom: 20px; font-weight: bold; }
-        h2 { font-size: 26px; font-weight: normal; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #fdfbf7;
+            color: #2c2518;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Navigation Bar - Matches Home, About, Portfolio & Contact */
+        nav {
+            background: #fcc200;
+            display: flex;
+            justify-content: center;
+            padding: 0 20px;
+            gap: 10px;
+        }
+
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 15px 25px;
+            font-size: 18px;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        nav a:hover,
+        nav a.active {
+            background: #b78727;
+            color: #ffffff;
+            border-bottom: 4px solid #fff3b0;
+        }
+
+        /* Page Header - Matches Home, About, Portfolio & Contact */
+        header {
+            background: #b78727;
+            text-align: center;
+            padding: 35px 20px;
+            border-bottom: 4px solid #fcc200;
+        }
+
+        header h1 {
+            color: #ffffff;
+            font-size: 32px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 960px;
+            width: 100%;
+            margin: 50px auto;
+            padding: 0 30px;
+            flex: 1;
+        }
+
+        /* Gallery Card Wrapper */
+        .gallery-card {
+            background: #ffffff;
+            padding: 35px;
+            border-radius: 12px;
+            border-top: 6px solid #fcc200;
+            box-shadow: 0 4px 15px rgba(183, 135, 39, 0.15);
+            text-align: center;
+        }
+
+        .gallery-card h2 {
+            font-size: 28px;
+            color: #b78727;
+            margin-bottom: 24px;
+        }
+
+        /* Carousel */
+        .carousel {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .slides {
+            position: relative;
+            aspect-ratio: 16 / 9;
+            overflow: hidden;
+            background: #1a150e;
+            border-radius: 10px;
+            border: 3px solid #eadca6;
+        }
+
+        .slide {
+            position: absolute;
+            inset: 0;
+            margin: 0;
+        }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .slide figcaption {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            padding: 14px 18px;
+            background: rgba(44, 37, 24, 0.78);
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            border-top: 2px solid #fcc200;
+        }
+
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 5;
+            border: none;
+            background: rgba(44, 37, 24, 0.65);
+            color: #ffffff;
+            font-size: 22px;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .carousel-btn:hover {
+            background: #fcc200;
+            color: #2c2518;
+        }
+
+        .prev {
+            left: 12px;
+        }
+
+        .next {
+            right: 12px;
+        }
+
+        .dots {
+            text-align: center;
+            padding: 16px 0 4px 0;
+        }
+
+        .dot {
+            width: 13px;
+            height: 13px;
+            margin: 0 6px;
+            padding: 0;
+            border: none;
+            border-radius: 50%;
+            background: #dfd3a8;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .dot:hover {
+            background: #fcc200;
+        }
+
+        .dot.active {
+            background: #b78727;
+            transform: scale(1.2);
+        }
+
+        /* Footer - Matches Home, About, Portfolio & Contact */
+        footer {
+            background-color: #fcc200;
+            color: #ffffff;
+            text-align: center;
+            padding: 16px 20px;
+            font-size: 15px;
+            border-top: 3px solid #b78727;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            nav {
+                flex-wrap: wrap;
+            }
+
+            nav a {
+                padding: 10px;
+                font-size: 14px;
+            }
+
+            .container {
+                padding: 0 20px;
+            }
+
+            .gallery-card {
+                padding: 22px 16px;
+            }
+        }
     </style>
 </head>
 <body>
 
+    <!-- Navigation -->
     <nav>
         <a href="index.html">Home</a>
         <a href="about.html">About</a>
-        <a href="gallery.html"   class="active">Gallery</a>
+        <a href="gallery.html" class="active">Gallery</a>
         <a href="portfolio.html">Portfolio</a>
         <a href="contact.html">Contact</a>
     </nav>
 
-	
+    <!-- Page Header -->
+    <header>
+        <h1>Gallery</h1>
+    </header>
 
-    <div class="container">
-		<h1>Gallery</h1>
-    <p></p>
-      
-    </div>
+    <!-- Main Content -->
+    <main class="container">
+        <div class="gallery-card">
+            <h2>My Photo Gallery</h2>
 
-	<style>
-		body {
-			font-family: Arial, sans-serif;
-			background: #f4f6fa;
-			margin: 0;
-			padding: 20px;
-		}
+            <div class="carousel" id="carousel">
+                <div class="slides">
+                    <figure class="slide">
+                        <img src="Image1.jpg" alt="Jojo's">
+                        <figcaption>Jojo's</figcaption>
+                    </figure>
+                    <figure class="slide">
+                        <img src="image2.jpg" alt="STANDS">
+                        <figcaption>STANDS</figcaption>
+                    </figure>
+                    <figure class="slide">
+                        <img src="image3.jpg" alt="DIEGO BRANDO">
+                        <figcaption>DIEGO BRANDO</figcaption>
+                    </figure>
+                    <figure class="slide">
+                        <img src="image4.jpg" alt="STEEL BALL RUN">
+                        <figcaption>STEEL BALL RUN</figcaption>
+                    </figure>
+                    <button class="carousel-btn prev" type="button" aria-label="Previous slide">&#10094;</button>
+                    <button class="carousel-btn next" type="button" aria-label="Next slide">&#10095;</button>
+                </div>
+                <div class="dots"></div>
+            </div>
+        </div>
+    </main>
 
-		h1 {
-			text-align: center;
-			color: #1F3864;
-		}
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 yori.Homes | Vince Zyvon D. Florano</p>
+    </footer>
 
-		.carousel {
-			max-width: 800px;
-			margin: 0 auto;
-		}
+    <!-- jQuery Carousel Script -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            const $carousel = $("#carousel");
+            const $slides = $carousel.find(".slide");
+            const $dotsBox = $carousel.find(".dots");
+            const total = $slides.length;
+            const FADE_TIME = 500;
+            const DELAY = 4000;
+            let current = 0;
+            let timer = null;
 
-		.slides {
-			position: relative;
-			aspect-ratio: 16 / 9;
-			/* keeps the shape on any screen width */
-			overflow: hidden;
-			background: #000;
-			border-radius: 8px;
-		}
+            $slides.hide().eq(0).show();
 
-		.slide {
-			position: absolute;
-			/* stack all slides in the same spot */
-			inset: 0;
-			margin: 0;
-		}
+            $slides.each(function (i) {
+                $("<button>")
+                    .attr({ type: "button", "aria-label": "Go to slide " + (i + 1) })
+                    .addClass("dot" + (i === 0 ? " active" : ""))
+                    .data("index", i)
+                    .appendTo($dotsBox);
+            });
+            const $dots = $dotsBox.find(".dot");
 
-		.slide img {
-			width: 100%;
-			height: 100%;
-			object-fit: cover;
-			/* fill the box without stretching */
-			display: block;
-		}
+            function showSlide(index) {
+                if (index === current) return;
 
-		.slide figcaption {
-			position: absolute;
-			left: 0;
-			right: 0;
-			bottom: 0;
-			padding: 12px 16px;
-			background: rgba(0, 0, 0, 0.55);
-			color: #fff;
-		}
+                $slides.eq(current).stop(true, true).fadeOut(FADE_TIME);
+                $slides.eq(index).stop(true, true).fadeIn(FADE_TIME);
+                $dots.removeClass("active").eq(index).addClass("active");
 
-		.nav {
-			position: absolute;
-			top: 50%;
-			transform: translateY(-50%);
-			z-index: 5;
-			border: none;
-			background: rgba(0, 0, 0, 0.5);
-			color: #fff;
-			font-size: 24px;
-			padding: 10px 14px;
-			cursor: pointer;
-		}
+                current = index;
+            }
 
-		.nav:hover {
-			background: rgba(0, 0, 0, 0.8);
-		}
+            function nextSlide() { showSlide((current + 1) % total); }
+            function prevSlide() { showSlide((current - 1 + total) % total); }
 
-		.prev {
-			left: 8px;
-		}
+            $carousel.on("click", ".next", nextSlide);
+            $carousel.on("click", ".prev", prevSlide);
+            $dotsBox.on("click", ".dot", function () {
+                showSlide($(this).data("index"));
+            });
 
-		.next {
-			right: 8px;
-		}
+            function startAutoplay() {
+                stopAutoplay();
+                timer = setInterval(nextSlide, DELAY);
+            }
 
-		.dots {
-			text-align: center;
-			padding: 12px 0;
-		}
+            function stopAutoplay() {
+                clearInterval(timer);
+            }
 
-		.dot {
-			width: 12px;
-			height: 12px;
-			margin: 0 5px;
-			padding: 0;
-			border: none;
-			border-radius: 50%;
-			background: #b8b8b8;
-			cursor: pointer;
-		}
+            $carousel.on("mouseenter", stopAutoplay)
+                .on("mouseleave", startAutoplay);
 
-		.dot.active {
-			background: #1F3864;
-		}
-	</style>
-</head>
+            startAutoplay();
 
-<body>
-	<h1>My Photo Gallery</h1>
-	<div class="carousel" id="carousel">
-		<div class="slides">
-			<figure class="slide"> <img src="Image1.jpg" alt="Describe image 1">
-				<figcaption>Jojo's</figcaption>
-			</figure>
-			<figure class="slide"> <img src="image2.jpg" alt="Describe image 2">
-				<figcaption>STANDS</figcaption>
-			</figure>
-			<figure class="slide"> <img src="image3.jpg" alt="Describe image 3">
-				<figcaption>DIEGO BRANDO</figcaption>
-			</figure>
-			<figure class="slide"> <img src="image4.jpg" alt="Describe image 4">
-				<figcaption>STEEL BALL RUN</figcaption>
-			</figure> <button class="nav prev" type="button" aria-label="Previous slide">&#10094;</button>
-			<button class="nav next" type="button" aria-label="Next slide">&#10095;</button>
-		</div>
-		<div class="dots"></div>
-	</div>
-	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-	<script>
-		$(document).ready(function () {
-			// 1. Cache elements and settings 
-			const $carousel = $("#carousel");
-			const $slides = $carousel.find(".slide");
-			const $dotsBox = $carousel.find(".dots");
-			const total = $slides.length;
-			const FADE_TIME = 500;
-			const DELAY = 4000;
-			let current = 0;
-			let timer = null;
-
-			$slides.hide().eq(0).show();
-
-			$slides.each(function (i) {
-				$("<button>")
-					.attr({ type: "button", "aria-label": "Go to slide " + (i + 1) })
-					.addClass("dot" + (i === 0 ? " active" : "")).data("index", i)
-					.appendTo($dotsBox);
-			});
-			const $dots = $dotsBox.find(".dot");
-
-			function showSlide(index) {
-				if (index === current) return;
-
-				$slides.eq(current).stop(true, true).fadeOut(FADE_TIME);
-				$slides.eq(index).stop(true, true).fadeIn(FADE_TIME);
-				$dots.removeClass("active").eq(index).addClass("active");
-
-				current = index;
-			}
-
-			function nextSlide() { showSlide((current + 1) % total); }
-			function prevSlide() { showSlide((current - 1 + total) % total); }
-
-			$carousel.on("click", ".next", nextSlide);
-			$carousel.on("click", ".prev", prevSlide);
-			$dotsBox.on("click", ".dot", function () {
-				showSlide($(this).data("index"));
-			});
-			function startAutoplay() {
-				stopAutoplay();
-				timer = setInterval(nextSlide, DELAY);
-			}
-			function stopAutoplay() {
-				clearInterval(timer);
-			}
-			$carousel.on("mouseenter", stopAutoplay)
-				.on("mouseleave", startAutoplay);
-				startAutoplay(); 
-				 $(document).on("keydown", function (event) {
-			   if (event.key === "ArrowRight") {
-			   nextSlide();
-			 } else if (event.key === "ArrowLeft") {
-				prevSlide();
-			 }
-		}); 
-	});
+            $(document).on("keydown", function (event) {
+                if (event.key === "ArrowRight") {
+                    nextSlide();
+                } else if (event.key === "ArrowLeft") {
+                    prevSlide();
+                }
+            });
+        });
     </script>
+
 </body>
 </html>
