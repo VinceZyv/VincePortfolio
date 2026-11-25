@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>5 Green &amp; Black SVG Shapes</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: #050a07;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      padding: 24px;
+    }
+
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 16px;
+      max-width: 720px;
+    }
+
+    .card {
+      width: 124px;
+      height: 164px;
+      border-radius: 14px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+    }
+
+    .card--black {
+      background: linear-gradient(145deg, #18181b, #09090b);
+      border: 2px solid #22c55e;
+      color: #4ade80;
+    }
+
+    .card--green {
+      background: linear-gradient(180deg, #14532d, #052e16);
+      border: 2px solid #4ade80;
+      color: #dcfce7;
+    }
+
+    .num {
+      font-size: 14px;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .svg-box {
+      width: 88px;
+      height: 88px;
+      display: grid;
+      place-items: center;
+    }
+
+    .shape {
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transform-box: fill-box;
+      transform-origin: center;
+      cursor: pointer;
+    }
+
+    .card:hover .shape {
+      transform: translateY(-4px) scale(1.08);
+    }
+
+    .card:hover .shape--spin {
+      transform: translateY(-4px) scale(1.08) rotate(18deg);
+    }
+  </style>
+</head>
+<body>
+  <main class="grid">
+    <!-- 1. Circle -->
+    <section class="card card--black">
+      <span class="num">1</span>
+      <div class="svg-box">
+        <svg viewBox="0 0 100 100" width="88" height="88" aria-label="Circle">
+          <defs>
+            <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#4ade80" />
+              <stop offset="100%" stop-color="#16a34a" />
+            </linearGradient>
+          </defs>
+          <circle class="shape" cx="50" cy="50" r="36" fill="url(#g1)" stroke="#052e16" stroke-width="2.5" />
+        </svg>
+      </div>
+    </section>
+
+    <!-- 2. Rounded Square -->
+    <section class="card card--green">
+      <span class="num">2</span>
+      <div class="svg-box">
+        <svg viewBox="0 0 100 100" width="88" height="88" aria-label="Rounded Square">
+          <defs>
+            <linearGradient id="g2" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#27272a" />
+              <stop offset="100%" stop-color="#09090b" />
+            </linearGradient>
+          </defs>
+          <rect class="shape" x="16" y="16" width="68" height="68" rx="12" fill="url(#g2)" stroke="#4ade80" stroke-width="2.5" />
+        </svg>
+      </div>
+    </section>
+
+    <!-- 3. Triangle -->
+    <section class="card card--black">
+      <span class="num">3</span>
+      <div class="svg-box">
+        <svg viewBox="0 0 100 100" width="88" height="88" aria-label="Triangle">
+          <defs>
+            <linearGradient id="g3" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#86efac" />
+              <stop offset="100%" stop-color="#22c55e" />
+            </linearGradient>
+          </defs>
+          <polygon class="shape" points="50,15 88,83 12,83" fill="url(#g3)" stroke="#052e16" stroke-width="2.5" />
+        </svg>
+      </div>
+    </section>
+
+    <!-- 4. Hexagon -->
+    <section class="card card--green">
+      <span class="num">4</span>
+      <div class="svg-box">
+        <svg viewBox="0 0 100 100" width="88" height="88" aria-label="Hexagon">
+          <defs>
+            <linearGradient id="g4" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#27272a" />
+              <stop offset="100%" stop-color="#09090b" />
+            </linearGradient>
+          </defs>
+          <polygon class="shape shape--spin" points="50,14 82,32 82,68 50,86 18,68 18,32" fill="url(#g4)" stroke="#4ade80" stroke-width="2.5" />
+        </svg>
+      </div>
+    </section>
+
+    <!-- 5. 5-Point Star -->
+    <section class="card card--black">
+      <span class="num">5</span>
+      <div class="svg-box">
+        <svg viewBox="0 0 100 100" width="88" height="88" aria-label="5-Point Star">
+          <defs>
+            <linearGradient id="g5" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#4ade80" />
+              <stop offset="100%" stop-color="#16a34a" />
+            </linearGradient>
+          </defs>
+          <polygon class="shape shape--spin" points="50,12 61,36 87,39 68,57 73,83 50,70 27,83 32,57 13,39 39,36" fill="url(#g5)" stroke="#052e16" stroke-width="2.5" />
+        </svg>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
