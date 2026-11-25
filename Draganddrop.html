@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drag and Drop API</title>
+    <link rel="stylesheet" href="draganddrop.css">
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+.draggable-container {
+    border: 1px solid blue;
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.droppable-container {
+    border: 1px solid salmon;
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.box {
+    background-color: aliceblue;
+    height: 60px;
+    width: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 5px;
+    cursor: grab;
+    border: 1px solid #ccc;
+}
+
+.dropable {
+    background-color: #f0f0f0;
+    height: 80px;
+    width: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 5px;
+    border: 2px dashed #999;
+}
+
+.dragging {
+    opacity: 0.4;
+    font-weight: bold;
+}
+
+    </style>
+</head>
+<body>
+
+    <div class="draggable-container">
+        <div class="box" draggable="true" id="box1">Soap</div>
+        <div class="box" draggable="true" id="box2">Dish</div>
+        <div class="box" draggable="true" id="box3">Peanut</div>
+        <div class="box" draggable="true" id="box4">Them</div>
+    </div>
+
+    <div class="droppable-container">
+        <div class="dropable" drop-zone="box1">Water</div>
+        <div class="dropable" drop-zone="box2">Rice</div>
+        <div class="dropable" drop-zone="box3">Bread</div>
+        <div class="dropable" drop-zone="box4">They</div>
+    </div>
+
+    <div class="display">
+        <p>Remarks: <span id="remarks"></span></p>
+        <p>Score: <span id="scores">0</span></p>
+    </div>
+    <script src="DragAndDropSample.js"></script>
+    <a href = "index.html">home</a>
+</body>
+</html>
