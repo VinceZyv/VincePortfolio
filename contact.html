@@ -3,34 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>yori.Homes</title>
+    <title>yori.Homes - Contact</title>
+
     <style>
-        body { margin: 0; padding: 0; font-family: 'Times New Roman', Times, serif; text-align: center; }
-        nav { background-color: #fcc200; display: flex; justify-content: flex-start; padding: 0 20px; }
-        nav a { color: #ffffff; text-decoration: none; padding: 14px 20px; font-size: 16px; }
-        nav a:hover, nav a.active { background-color: #b78727; border-bottom: 3px solid #ffcc00; }
-        .container { max-width: 800px; margin: 60px auto 0 auto; padding: 20px; }
-        h1 { font-size: 36px; margin-bottom: 20px; font-weight: bold; }
-        h2 { font-size: 26px; font-weight: normal; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #fdfbf7;
+            color: #2c2518;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Navigation Bar - Matches Home, About & Portfolio */
+        nav {
+            background: #fcc200;
+            display: flex;
+            justify-content: center;
+            padding: 0 20px;
+            gap: 10px;
+        }
+
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 15px 25px;
+            font-size: 18px;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        nav a:hover,
+        nav a.active {
+            background: #b78727;
+            color: #ffffff;
+            border-bottom: 4px solid #fff3b0;
+        }
+
+        /* Page Header - Matches Home, About & Portfolio */
+        header {
+            background: #b78727;
+            text-align: center;
+            padding: 35px 20px;
+            border-bottom: 4px solid #fcc200;
+        }
+
+        header h1 {
+            color: #ffffff;
+            font-size: 32px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 700px;
+            width: 100%;
+            margin: 50px auto;
+            padding: 0 30px;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Contact Card */
+        .contact-card {
+            width: 100%;
+            background: #ffffff;
+            padding: 50px 40px;
+            text-align: center;
+            border-radius: 12px;
+            border-top: 6px solid #fcc200;
+            box-shadow: 0 4px 15px rgba(183, 135, 39, 0.15);
+        }
+
+        .contact-card h2 {
+            font-size: 30px;
+            color: #b78727;
+            margin-bottom: 14px;
+        }
+
+        .contact-card p {
+            font-size: 18px;
+            color: #444444;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        /* Social Links */
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .social-btn {
+            display: inline-block;
+            min-width: 180px;
+            padding: 14px 28px;
+            background: #fcc200;
+            color: #2c2518;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            border: 1px solid #e0ab00;
+            transition: background 0.2s, color 0.2s, transform 0.2s;
+        }
+
+        .social-btn:hover {
+            background: #b78727;
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        /* Footer - Matches Home, About & Portfolio */
+        footer {
+            background-color: #fcc200;
+            color: #ffffff;
+            text-align: center;
+            padding: 16px 20px;
+            font-size: 15px;
+            border-top: 3px solid #b78727;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            nav {
+                flex-wrap: wrap;
+            }
+
+            nav a {
+                padding: 10px;
+                font-size: 14px;
+            }
+
+            .contact-card {
+                padding: 35px 20px;
+            }
+        }
     </style>
 </head>
 <body>
 
+    <!-- Navigation -->
     <nav>
         <a href="index.html">Home</a>
         <a href="about.html">About</a>
         <a href="gallery.html">Gallery</a>
         <a href="portfolio.html">Portfolio</a>
-        <a href="contact.html"  class="active">Contact</a>
+        <a href="contact.html" class="active">Contact</a>
     </nav>
 
-	
+    <!-- Page Header -->
+    <header>
+        <h1>Contact</h1>
+    </header>
 
-    <div class="container">
-		<h1>Contact</h1>
-    <p>feel free to contact</p>
-      
-    </div>
+    <!-- Main Content -->
+    <main class="container">
+        <div class="contact-card">
+            <h2>Feel free to contact me</h2>
+            <p>You can reach out or follow me on my social media accounts below:</p>
+
+            <div class="social-links">
+                <a href="https://www.facebook.com/vince.zyvon" target="_blank" rel="noopener noreferrer" class="social-btn">Facebook</a>
+                <a href="https://www.instagram.com/xoxo.yorichii/" target="_blank" rel="noopener noreferrer" class="social-btn">Instagram</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 yori.Homes | Vince Zyvon D. Florano</p>
+    </footer>
 
 </body>
-</html
+</html>
