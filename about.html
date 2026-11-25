@@ -3,72 +3,290 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>yori.Homes</title>
-    <style>
-        body { margin: 0; padding: 0; font-family: 'Times New Roman', Times, serif; text-align: center; }
-        nav { background-color: #fcc200; display: flex; justify-content: flex-start; padding: 0 20px; }
-        nav a { color: #ffffff; text-decoration: none; padding: 14px 20px; font-size: 16px; }
-        nav a:hover, nav a.active { background-color: #b78727; border-bottom: 3px solid #ffcc00; }
-        .container { max-width: 800px; margin: 60px auto 0 auto; padding: 20px; }
-        h1 { font-size: 36px; margin-bottom: 20px; font-weight: bold; }
-        h2 { font-size: 26px; font-weight: normal; }
-    </style>
+    <title>yori.Homes - About Me</title>
 
-	 <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.2/themes/base/jquery-ui.css">
-  <link rel="stylesheet" href="/resources/demos/style.css">
-  <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-  <script src="https://code.jquery.com/ui/1.14.2/jquery-ui.js"></script>
-  <script>
-    $(function () {
-      $("#accordion").accordion({
-        collapsible: true
-      });
-    });
-  </script>
-	
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #fdfbf7;
+            color: #2c2518;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Navigation Bar - Matches Home & Portfolio */
+        nav {
+            background: #fcc200;
+            display: flex;
+            justify-content: center;
+            padding: 0 20px;
+            gap: 10px;
+        }
+
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 15px 25px;
+            font-size: 18px;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        nav a:hover,
+        nav a.active {
+            background: #b78727;
+            color: #ffffff;
+            border-bottom: 4px solid #fff3b0;
+        }
+
+        /* Header */
+        header {
+            background: #b78727;
+            text-align: center;
+            padding: 35px 20px;
+            border-bottom: 4px solid #fcc200;
+        }
+
+        header h1 {
+            color: #ffffff;
+            font-size: 32px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Main Layout */
+        .container {
+            display: flex;
+            gap: 30px;
+            max-width: 1400px;
+            width: 100%;
+            margin: 50px auto;
+            padding: 0 30px;
+            align-items: flex-start;
+            flex: 1;
+        }
+
+        /* Accordion */
+        .about-content {
+            flex: 2;
+        }
+
+        .accordion {
+            margin-bottom: 8px;
+        }
+
+        .accordion button {
+            width: 100%;
+            padding: 17px 20px;
+            background: #fcc200;
+            color: #2c2518;
+            border: 1px solid #e0ab00;
+            text-align: left;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .accordion button:hover {
+            background: #b78727;
+            color: #ffffff;
+        }
+
+        .panel {
+            display: none;
+            padding: 20px 30px;
+            background: #ffffff;
+            color: #333333;
+            line-height: 1.6;
+            font-size: 18px;
+            border: 1px solid #eadca6;
+            border-top: none;
+            border-radius: 0 0 6px 6px;
+        }
+
+        .panel.show {
+            display: block;
+        }
+
+        /* Profile Card */
+        .profile-card {
+            flex: 1;
+            background: #ffffff;
+            padding: 35px;
+            text-align: center;
+            border-radius: 12px;
+            border-top: 6px solid #fcc200;
+            box-shadow: 0 4px 15px rgba(183, 135, 39, 0.15);
+        }
+
+        .profile-card img {
+            width: 220px;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 4px solid #b78727;
+            margin-bottom: 15px;
+        }
+
+        .profile-card h2 {
+            font-size: 30px;
+            color: #b78727;
+            margin-bottom: 15px;
+        }
+
+        .profile-card p {
+            font-size: 18px;
+            color: #444444;
+            margin: 12px 0;
+            line-height: 1.5;
+        }
+
+        /* Footer - Matches Home & Portfolio */
+        footer {
+            background-color: #fcc200;
+            color: #ffffff;
+            text-align: center;
+            padding: 16px 20px;
+            font-size: 15px;
+            border-top: 3px solid #b78727;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            nav {
+                flex-wrap: wrap;
+            }
+
+            nav a {
+                padding: 10px;
+                font-size: 14px;
+            }
+
+            .container {
+                flex-direction: column;
+            }
+
+            .about-content,
+            .profile-card {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
+    <!-- Navigation -->
     <nav>
-        <a href="index.html" >Home</a>
-        <a href="about.html" class="active" >About</a>
+        <a href="index.html">Home</a>
+        <a href="about.html" class="active">About</a>
         <a href="gallery.html">Gallery</a>
         <a href="portfolio.html">Portfolio</a>
         <a href="contact.html">Contact</a>
     </nav>
 
-	
+    <!-- Page Header -->
+    <header>
+        <h1>About Me</h1>
+    </header>
 
+    <!-- Main Content -->
     <div class="container">
-        <h1>About meh</h1>
-       
+
+        <div class="about-content">
+
+            <div class="accordion">
+                <button onclick="togglePanel(this)">
+                    ▾ Who I Am
+                </button>
+                <div class="panel show">
+                    I am a 17-year-old Grade 12 ICT Programming student at Governor Juanito Reyes Remulla Senior High School, currently living with my grandparents. As an aspiring developer, I enjoy building functional websites and continuously improving my technical skills every day.
+                </div>
+            </div>
+
+            <div class="accordion">
+                <button onclick="togglePanel(this)">
+                    ▸ Background
+                </button>
+                <div class="panel">
+                    I am a student who is deeply curious about Java programming and how software works behind the scenes. Through my ICT strand, I have been learning the fundamentals of coding, problem-solving, and web development by building hands-on school projects.
+                </div>
+            </div>
+
+            <div class="accordion">
+                <button onclick="togglePanel(this)">
+                    ▸ Interests
+                </button>
+                <div class="panel">
+                    Outside of school, I enjoy playing online games, watching Marvel movies, and exploring more programming languages and code structures. Trying out new coding techniques helps me discover creative ways to build better projects.
+                </div>
+            </div>
+
+            <div class="accordion">
+                <button onclick="togglePanel(this)">
+                    ▸ Personality
+                </button>
+                <div class="panel">
+                    I am a happy, easygoing person who loves to explore new things and take on fresh challenges. I stay curious, keep a positive mindset, and always look for ways to learn and grow both as a student and as a programmer.
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Profile Card -->
+        <div class="profile-card">
+
+            <img src="vince.jpg" alt="My Profile Picture">
+
+            <h2>Hi! I'm Vince.</h2>
+
+            <p>
+                I'm a 17-year-old Grade 12 ICT programming student who enjoys
+                building clean websites, learning Java, and playing online
+                games.
+            </p>
+
+            <p>
+                <strong>School:</strong><br>
+                Governor Juanito Reyes Remulla
+                Senior High School
+            </p>
+
+            <p>
+                <strong>Strand:</strong>
+                TVL - ICT (Computer Programming)
+            </p>
+
+        </div>
+
     </div>
 
-	
-  <div id="accordion">
-    <h3>Myself</h3>
-    <div>
-      <p>My name is Vince Zyvon D. Florano, I like playing games and eating a lot of food.</p>
-    </div>
-    <h3>Where u can find me</h3>
-    <div>
-      <p>You can find me in my house</p>
-    </div>
-    <h3>Hobbies</h3>
-    <div>
-      <p>Playing games</p>
-      <ul>
-        <li>Roblox</li>
-        <li>List item two</li>
-        <li>List item three</li>
-      </ul>
-    </div>
-    <h3>My dream</h3>
-    <div>
-      <p>To become king of pirates.</p>
-      <p>I'm still undecided from what i want to become</p>
-    </div>
-  </div>
-	
+    <footer>
+        <p>&copy; 2026 yori.Homes | Vince Zyvon D. Florano</p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        function togglePanel(button) {
+            const panel = button.nextElementSibling;
+
+            panel.classList.toggle("show");
+
+            if (panel.classList.contains("show")) {
+                button.innerHTML = button.innerHTML.replace("▸", "▾");
+            } else {
+                button.innerHTML = button.innerHTML.replace("▾", "▸");
+            }
+        }
+    </script>
+
 </body>
-</html
+</html>
