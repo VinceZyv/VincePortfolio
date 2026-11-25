@@ -4,113 +4,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>yori.Homes</title>
-    <link rel="stylesheet" href="gridstyle.css">
+    <title>yori.Homes - Portfolio</title>
+
     <style>
-        *{
-    margin:0px;
-    padding:0px;
-    box-sizing:border-box;
-}
-
-body{
-    background-color: rgb(255, 255, 255);
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    min-height:350vh;
-}
-
-.box{
-    background-color: #eee8aa ;
-    background-image: linear-gradient(#eee8aa,#da9100);
-    font-size:1rem;
-    padding:1rem;
-}
-
-.container{
-    display:grid;
-    min-height:100px;
-    grid-auto-flow: column;
-    grid-template-columns: auto;
-    grid-template-rows: repeat(4, 1fr);
-    gap: 1em;   
-}
-
-.link{
-    background-image: linear-gradient(90deg, #ffff, #f5deb3);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-stroke: 0.5px #000000;
-  color: transparent;
-  display: inline-block; 
-  font-family: Arial;
-    font-family: Arial;
-    outline: white;
-    text-decoration: none;
-}
-        body {
+        * {
             margin: 0;
             padding: 0;
-            font-family: 'Times New Roman', Times, serif;
-            text-align: center;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #fdfbf7;
+            color: #2c2518;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
         }
 
+        /* Navigation Bar - Matches About & Home */
         nav {
-            background-color: #fcc200;
+            background: #fcc200;
             display: flex;
-            justify-content: flex-start;
+            justify-content: center;
             padding: 0 20px;
+            gap: 10px;
         }
 
         nav a {
             color: #ffffff;
             text-decoration: none;
-            padding: 14px 20px;
-            font-size: 16px;
+            padding: 15px 25px;
+            font-size: 18px;
+            font-weight: bold;
+            transition: background 0.2s;
         }
 
         nav a:hover,
         nav a.active {
-            background-color: #b78727;
-            border-bottom: 3px solid #ffcc00;
+            background: #b78727;
+            color: #ffffff;
+            border-bottom: 4px solid #fff3b0;
         }
 
+        /* Page Header - Matches About & Home */
+        header {
+            background: #b78727;
+            text-align: center;
+            padding: 35px 20px;
+            border-bottom: 4px solid #fcc200;
+        }
+
+        header h1 {
+            color: #ffffff;
+            font-size: 32px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Main Portfolio Grid */
         .container {
-            max-width: 800px;
-            margin: 60px auto 40px auto;
-            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            width: 100%;
+            margin: 50px auto;
+            padding: 0 30px;
             flex: 1;
+            align-content: start;
         }
 
-        h1 {
-            font-size: 36px;
-            margin-bottom: 20px;
+        /* Project Cards */
+        .box {
+            background: #ffffff;
+            border-radius: 10px;
+            border-top: 5px solid #fcc200;
+            box-shadow: 0 4px 12px rgba(183, 135, 39, 0.14);
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+            overflow: hidden;
+        }
+
+        .box:hover {
+            transform: translateY(-4px);
+            border-top-color: #b78727;
+            box-shadow: 0 8px 18px rgba(183, 135, 39, 0.24);
+        }
+
+        .box a.link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 28px 18px;
+            height: 100%;
+            color: #2c2518;
+            text-decoration: none;
+            font-size: 18px;
             font-weight: bold;
+            transition: background 0.2s, color 0.2s;
         }
 
-        h2 {
-            font-size: 26px;
-            font-weight: normal;
+        .box:hover a.link {
+            background: #fff9e6;
+            color: #b78727;
         }
 
+        /* Footer - Matches About & Home */
         footer {
             background-color: #fcc200;
             color: #ffffff;
+            text-align: center;
             padding: 16px 20px;
             font-size: 15px;
             border-top: 3px solid #b78727;
         }
 
-        footer p {
-            margin: 0;
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            nav {
+                flex-wrap: wrap;
+            }
+
+            nav a {
+                padding: 10px;
+                font-size: 14px;
+            }
+
+            .container {
+                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+                padding: 0 20px;
+            }
         }
     </style>
 </head>
 
 <body>
 
+    <!-- Navigation -->
     <nav>
         <a href="index.html">Home</a>
         <a href="about.html">About</a>
@@ -119,44 +149,33 @@ body{
         <a href="contact.html">Contact</a>
     </nav>
 
-    <h1 class="gradientTextHeader">My Portfolio</h1>
+    <!-- Page Header -->
+    <header>
+        <h1>My Portfolio</h1>
+    </header>
+
+    <!-- Portfolio Projects Grid -->
     <main class="container">
-        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/Forms.html" class="link"><b>Forms</b></a>
-        </div>
-        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/savegrades.html" class="link"><b>Save
-                    Grades</b></a></div>
-        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/schedule.html" class="link"><b>Class
-                    sched</b></a></div>
-        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/styledsched.html" class="link"><b>Styled
-                    Sched</b></a></div>
-        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/Yori.html" class="link"><b>LogIn
-                    Form</b></a></div>
-        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/sample.html" class="link"><b>Console
-                    Example</b></a></div>
-        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/DcCalc.html" class="link"><b>Discount
-                    Calculator</b></a></div>
-        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/samplecalc.html" class="link"><b>Sample
-                    Calculator</b></a></div>
-        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/dotnetframework.html" class="link"><b>DotNet
-                    Framework</b></a></div>
-        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/STUDENTSLIST.html" class="link"><b>Students
-                    Data</b></a></div>
-        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/LOGINLOGIC.html"
-                class="link"><b>LogInLogic</b></a></div>
-        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/DEMOGRID.html" class="link"><b>Grid</b></a>
-        </div>
-        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/gallerysample.html"
-                class="link"><b>GallerySample</b></a></div>
-        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/accordion.html"
-                class="link"><b>AccordionSample</b></a></div>
-        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/jQuery.html"
-                class="link"><b>jQuerySample</b></a></div>
-        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/snowman.html" class="link"><b>Snowman
-                    Example</b></a></div>
-        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/practiceflex.html" class="link"><b>Flex
-                    Box</b></a></div>
+        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/Forms.html" class="link">Forms</a></div>
+        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/savegrades.html" class="link">Save Grades</a></div>
+        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/schedule.html" class="link">Class Sched</a></div>
+        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/styledsched.html" class="link">Styled Sched</a></div>
+        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/Yori.html" class="link">LogIn Form</a></div>
+        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/sample.html" class="link">Console Example</a></div>
+        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/DcCalc.html" class="link">Discount Calculator</a></div>
+        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/samplecalc.html" class="link">Sample Calculator</a></div>
+        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/dotnetframework.html" class="link">DotNet Framework</a></div>
+        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/STUDENTSLIST.html" class="link">Students Data</a></div>
+        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/LOGINLOGIC.html" class="link">LogInLogic</a></div>
+        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/DEMOGRID.html" class="link">Grid</a></div>
+        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/gallerysample.html" class="link">GallerySample</a></div>
+        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/accordion.html" class="link">AccordionSample</a></div>
+        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/jQuery.html" class="link">jQuerySample</a></div>
+        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/snowman.html" class="link">Snowman Example</a></div>
+        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/practiceflex.html" class="link">Flex Box</a></div>
     </main>
 
+    <!-- Footer -->
     <footer>
         <p>&copy; 2026 yori.Homes | Vince Zyvon D. Florano</p>
     </footer>
