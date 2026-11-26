@@ -60,19 +60,68 @@
             letter-spacing: 0.5px;
         }
 
-        /* Main Content */
-        .container {
-            max-width: 960px;
+        /* Main Layout with Left & Right Asides */
+        .page-layout {
+            max-width: 1320px;
             width: 100%;
-            margin: 50px auto;
-            padding: 0 30px;
+            margin: 40px auto;
+            padding: 0 24px;
             flex: 1;
+            display: grid;
+            grid-template-columns: 240px minmax(0, 1fr) 260px;
+            gap: 24px;
+            align-items: start;
+        }
+
+        aside {
+            background: #ffffff;
+            padding: 22px;
+            border-radius: 12px;
+            border-top: 6px solid #fcc200;
+            box-shadow: 0 4px 15px rgba(183, 135, 39, 0.15);
+        }
+
+        aside h3 {
+            font-size: 19px;
+            color: #b78727;
+            margin-bottom: 12px;
+        }
+
+        aside p {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #4a3f2b;
+        }
+
+        .aside-left ul {
+            list-style: none;
+            margin-top: 12px;
+            font-size: 14px;
+            line-height: 1.8;
+            color: #4a3f2b;
+        }
+
+        .aside-right .desc-badge {
+            display: inline-block;
+            background: #fff3b0;
+            color: #2c2518;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 4px 10px;
+            border-radius: 999px;
+            margin-bottom: 10px;
+            border: 1px solid #eadca6;
+        }
+
+        /* Main Content */
+        main {
+            min-width: 0;
         }
 
         /* Gallery Card Wrapper */
         .gallery-card {
             background: #ffffff;
-            padding: 35px;
+            padding: 30px;
             border-radius: 12px;
             border-top: 6px solid #fcc200;
             box-shadow: 0 4px 15px rgba(183, 135, 39, 0.15);
@@ -82,7 +131,7 @@
         .gallery-card h2 {
             font-size: 28px;
             color: #b78727;
-            margin-bottom: 24px;
+            margin-bottom: 22px;
         }
 
         /* Carousel */
@@ -192,6 +241,17 @@
         }
 
         /* Responsive Design */
+        @media (max-width: 1024px) {
+            .page-layout {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            main {
+                grid-column: 1 / -1;
+                order: -1;
+            }
+        }
+
         @media (max-width: 768px) {
             nav {
                 flex-wrap: wrap;
@@ -202,8 +262,10 @@
                 font-size: 14px;
             }
 
-            .container {
-                padding: 0 20px;
+            .page-layout {
+                grid-template-columns: 1fr;
+                margin: 25px auto;
+                padding: 0 16px;
             }
 
             .gallery-card {
@@ -228,36 +290,56 @@
         <h1>Gallery</h1>
     </header>
 
-    <!-- Main Content -->
-    <main class="container">
-        <div class="gallery-card">
-            <h2>My Photo Gallery</h2>
+    <!-- Main Layout -->
+    <div class="page-layout">
+        <!-- Left Aside -->
+        <aside class="aside-left" aria-label="Gallery notes">
+            <h3>About This Gallery</h3>
+            <p>A quick look at the people, memories, and goals that shape my journey.</p>
+            <ul>
+                <li><strong>Tip:</strong> Use arrow keys or buttons to browse.</li>
+                <li><strong>Photos:</strong> 4 personal highlights</li>
+            </ul>
+        </aside>
 
-            <div class="carousel" id="carousel">
-                <div class="slides">
-                    <figure class="slide">
-                        <img src="futureme.jpg" alt="Myfuture">
-                        <figcaption>I want to become a Seaman in the future</figcaption>
-                    </figure>
-                    <figure class="slide">
-                        <img src="family.jpg" alt="Family">
-                        <figcaption>This my whole family and all of us we're happy</figcaption>
-                    </figure>
-                    <figure class="slide">
-                        <img src="ogfriends.jpg" alt="friends">
-                        <figcaption>This is my friends since g9-g10 most of them are girl</figcaption>
-                    </figure>
-                    <figure class="slide">
-                        <img src="vince.jpg" alt="JSme">
-                        <figcaption>I dont have a uniform yet but yes i am a student</figcaption>
-                    </figure>
-                    <button class="carousel-btn prev" type="button" aria-label="Previous slide">&#10094;</button>
-                    <button class="carousel-btn next" type="button" aria-label="Next slide">&#10095;</button>
+        <!-- Main Content -->
+        <main>
+            <div class="gallery-card">
+                <h2>My Photo Gallery</h2>
+
+                <div class="carousel" id="carousel">
+                    <div class="slides">
+                        <figure class="slide" data-desc="Sailing the seas and building a career at sea is a big dream I am working toward.">
+                            <img src="futureme.jpg" alt="Myfuture">
+                            <figcaption>I want to become a Seaman in the future</figcaption>
+                        </figure>
+                        <figure class="slide" data-desc="Moments with my family remind me of my roots, support system, and everyday joy.">
+                            <img src="family.jpg" alt="Family">
+                            <figcaption>This my whole family and all of us we're happy</figcaption>
+                        </figure>
+                        <figure class="slide" data-desc="Memories with my G9–G10 barkada—lots of laughs, stories, and friendships that stuck.">
+                            <img src="ogfriends.jpg" alt="friends">
+                            <figcaption>This is my friends since g9-g10 most of them are girl</figcaption>
+                        </figure>
+                        <figure class="slide" data-desc="A snapshot of my student life as I keep learning and growing step by step.">
+                            <img src="vince.jpg" alt="JSme">
+                            <figcaption>I dont have a uniform yet but yes i am a student</figcaption>
+                        </figure>
+                        <button class="carousel-btn prev" type="button" aria-label="Previous slide">&#10094;</button>
+                        <button class="carousel-btn next" type="button" aria-label="Next slide">&#10095;</button>
+                    </div>
+                    <div class="dots"></div>
                 </div>
-                <div class="dots"></div>
             </div>
-        </div>
-    </main>
+        </main>
+
+        <!-- Right Aside -->
+        <aside class="aside-right" aria-label="Photo description">
+            <span class="desc-badge" id="slideCounter">Photo 1 of 4</span>
+            <h3>Short Description</h3>
+            <p id="slideDescription">Sailing the seas and building a career at sea is a big dream I am working toward.</p>
+        </aside>
+    </div>
 
     <!-- Footer -->
     <footer>
@@ -271,6 +353,8 @@
             const $carousel = $("#carousel");
             const $slides = $carousel.find(".slide");
             const $dotsBox = $carousel.find(".dots");
+            const $descText = $("#slideDescription");
+            const $counter = $("#slideCounter");
             const total = $slides.length;
             const FADE_TIME = 500;
             const DELAY = 4000;
@@ -278,6 +362,13 @@
             let timer = null;
 
             $slides.hide().eq(0).show();
+            updateAside(0);
+
+            function updateAside(index) {
+                const desc = $slides.eq(index).data("desc") || "";
+                $descText.text(desc);
+                $counter.text("Photo " + (index + 1) + " of " + total);
+            }
 
             $slides.each(function (i) {
                 $("<button>")
@@ -294,6 +385,7 @@
                 $slides.eq(current).stop(true, true).fadeOut(FADE_TIME);
                 $slides.eq(index).stop(true, true).fadeIn(FADE_TIME);
                 $dots.removeClass("active").eq(index).addClass("active");
+                updateAside(index);
 
                 current = index;
             }
