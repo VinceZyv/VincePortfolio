@@ -93,15 +93,53 @@
             font-size: 20px;
             font-weight: bold;
             color: #2c2518;
-            margin-bottom: 16px;
+            margin-bottom: 18px;
         }
 
         .home-card .bio {
             font-size: 18px;
             color: #444444;
-            line-height: 1.6;
-            max-width: 650px;
+            line-height: 1.65;
+            max-width: 680px;
+            margin: 0 auto 16px auto;
+        }
+
+        .home-card .sub-bio {
+            font-size: 16px;
+            color: #5a5244;
+            line-height: 1.65;
+            max-width: 680px;
+            margin: 0 auto 24px auto;
+        }
+
+        .highlights {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
             margin: 0 auto 30px auto;
+            max-width: 720px;
+        }
+
+        .highlight-box {
+            flex: 1 1 200px;
+            background: #fdfbf7;
+            border: 1px solid #f0e2b6;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: left;
+        }
+
+        .highlight-box h3 {
+            font-size: 16px;
+            color: #b78727;
+            margin-bottom: 6px;
+        }
+
+        .highlight-box p {
+            font-size: 14px;
+            color: #444444;
+            line-height: 1.5;
         }
 
         .btn-group {
@@ -180,9 +218,29 @@
             <p class="bio">
                 Hi! I'm Vince, a Grade 12 ICT Programming student who enjoys building websites—and when I'm taking a break from coding, I love watching Marvel movies!
             </p>
+            <p class="sub-bio">
+                This site is my personal space on the web where I experiment with layouts, practice front-end development, and share what I'm learning along the way. Feel free to explore my background, browse photos, or check out the projects I've put together.
+            </p>
+
+            <div class="highlights">
+                <div class="highlight-box">
+                    <h3>ICT &amp; Web Dev</h3>
+                    <p>Practicing clean HTML, CSS, and interactive web pages as a Grade 12 programming student.</p>
+                </div>
+                <div class="highlight-box">
+                    <h3>Projects &amp; Gallery</h3>
+                    <p>Check out what I've built in my portfolio or look through snapshots in the gallery.</p>
+                </div>
+                <div class="highlight-box">
+                    <h3>Off-Screen Favorites</h3>
+                    <p>Recharging with MCU marathons, story arcs, and favorite character moments between coding sessions.</p>
+                </div>
+            </div>
+
             <div class="btn-group">
                 <a href="about.html" class="btn">About Me</a>
                 <a href="portfolio.html" class="btn">View Portfolio</a>
+                <a href="gallery.html" class="btn">Explore Gallery</a>
             </div>
         </div>
     </div>
