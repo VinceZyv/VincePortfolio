@@ -1,440 +1,509 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>yori.Homes - Gallery</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gallery | yori.Homes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --gold-primary: #f4b400;
+      --gold-hover: #d99b00;
+      --gold-soft: #fff8e1;
+      --dark-surface: #1e1e24;
+      --dark-text: #1f2937;
+      --muted-text: #4b5563;
+      --card-bg: rgba(255, 255, 255, 0.9);
+      --border-light: rgba(0, 0, 0, 0.08);
+    }
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-        body {
-            background-image: url("vinland.jpg");
-            background-color: #fdfbf7;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            color: #2c2518;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--dark-text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background:
+        linear-gradient(rgba(30, 30, 36, 0.35), rgba(30, 30, 36, 0.45)),
+        url("vinland.jpg") center / cover no-repeat fixed;
+      line-height: 1.6;
+    }
 
-        /* Navigation Bar - Matches Home, About, Portfolio & Contact */
-        nav {
-            background: #fcc200;
-            display: flex;
-            justify-content: center;
-            padding: 0 20px;
-            gap: 10px;
-        }
+    header {
+      background-color: var(--dark-surface);
+      padding: 0.85rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
 
-        nav a {
-            color: #ffffff;
-            text-decoration: none;
-            padding: 15px 25px;
-            font-size: 18px;
-            font-weight: bold;
-            transition: background 0.2s;
-        }
+    .nav-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
 
-        nav a:hover,
-        nav a.active {
-            background: #b78727;
-            color: #ffffff;
-            border-bottom: 4px solid #fff3b0;
-        }
+    .brand {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 800;
+      font-size: 1.25rem;
+      color: #ffffff;
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
 
-        /* Page Header - Matches Home, About, Portfolio & Contact */
-        header {
-            background: #b78727;
-            text-align: center;
-            padding: 35px 20px;
-            border-bottom: 4px solid #fcc200;
-        }
+    .brand span {
+      color: var(--gold-primary);
+    }
 
-        header h1 {
-            color: #ffffff;
-            font-size: 32px;
-            letter-spacing: 0.5px;
-        }
+    nav ul {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
 
-        /* Main Layout with Left & Right Asides */
-        .page-layout {
-            max-width: 1320px;
-            width: 100%;
-            margin: 40px auto;
-            padding: 0 24px;
-            flex: 1;
-            display: grid;
-            grid-template-columns: 240px minmax(0, 1fr) 260px;
-            gap: 24px;
-            align-items: start;
-        }
+    nav a {
+      text-decoration: none;
+      color: #e5e7eb;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.45rem 0.9rem;
+      border-radius: 6px;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
 
-        aside {
-            background: rgba(255, 255, 255, 0.72);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            padding: 22px;
-            border-radius: 12px;
-            border-top: 6px solid #fcc200;
-            box-shadow: 0 4px 15px rgba(183, 135, 39, 0.18);
-        }
+    nav a:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+    }
 
-        aside h3 {
-            font-size: 19px;
-            color: #8f6516;
-            margin-bottom: 12px;
-        }
+    nav a.active {
+      background-color: var(--gold-primary);
+      color: var(--dark-surface);
+      font-weight: 600;
+    }
 
-        aside p {
-            font-size: 14px;
-            line-height: 1.6;
-            color: #2c2518;
-        }
+    .wrapper {
+      flex: 1;
+      max-width: 1280px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem;
+    }
 
-        .aside-left ul {
-            list-style: none;
-            margin-top: 12px;
-            font-size: 14px;
-            line-height: 1.8;
-            color: #2c2518;
-        }
+    .page-title-bar {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
 
-        .aside-right .desc-badge {
-            display: inline-block;
-            background: rgba(255, 243, 176, 0.9);
-            color: #2c2518;
-            font-size: 12px;
-            font-weight: bold;
-            padding: 4px 10px;
-            border-radius: 999px;
-            margin-bottom: 10px;
-            border: 1px solid #e0ab00;
-        }
+    .page-title-bar h1 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: clamp(1.75rem, 4vw, 2.25rem);
+      font-weight: 800;
+      color: #ffffff;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
+    }
 
-        /* Main Content */
-        main {
-            min-width: 0;
-        }
+    .page-layout {
+      display: grid;
+      grid-template-columns: 240px minmax(0, 1fr) 260px;
+      gap: 1.5rem;
+      align-items: stretch;
+    }
 
-        /* Gallery Card Wrapper */
-        .gallery-card {
-            background: rgba(255, 255, 255, 0.72);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            padding: 30px;
-            border-radius: 12px;
-            border-top: 6px solid #fcc200;
-            box-shadow: 0 4px 15px rgba(183, 135, 39, 0.18);
-            text-align: center;
-        }
+    aside {
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 1.4rem;
+      border-radius: 14px;
+      border-top: 4px solid var(--gold-primary);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
 
-        .gallery-card h2 {
-            font-size: 28px;
-            color: #8f6516;
-            margin-bottom: 22px;
-        }
+    .aside-left .aside-body,
+    .aside-right .desc-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
 
-        /* Carousel */
-        .carousel {
-            max-width: 800px;
-            margin: 0 auto;
-        }
+    aside h3 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.05rem;
+      color: var(--dark-surface);
+      margin-bottom: 0.65rem;
+    }
 
-        .slides {
-            position: relative;
-            aspect-ratio: 16 / 9;
-            overflow: hidden;
-            background: #1a150e;
-            border-radius: 10px;
-            border: 3px solid #eadca6;
-        }
+    aside p {
+      font-size: 0.92rem;
+      color: var(--muted-text);
+      line-height: 1.65;
+    }
 
-        .slide {
-            position: absolute;
-            inset: 0;
-            margin: 0;
-        }
+    .aside-left ul {
+      list-style: none;
+      margin-top: 0.85rem;
+      padding-top: 0.85rem;
+      border-top: 1px solid var(--border-light);
+      font-size: 0.88rem;
+      color: var(--dark-text);
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
 
-        .slide img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
+    .desc-badge {
+      display: inline-block;
+      align-self: flex-start;
+      background-color: var(--gold-soft);
+      color: #926000;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 0.25rem 0.7rem;
+      border-radius: 999px;
+      margin-bottom: 0.75rem;
+      border: 1px solid rgba(244, 180, 0, 0.35);
+    }
 
-        .slide figcaption {
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            padding: 14px 18px;
-            background: rgba(44, 37, 24, 0.82);
-            color: #ffffff;
-            font-size: 18px;
-            font-weight: bold;
-            letter-spacing: 0.5px;
-            border-top: 2px solid #fcc200;
-        }
+    main {
+      min-width: 0;
+    }
 
-        .carousel-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 5;
-            border: none;
-            background: rgba(44, 37, 24, 0.65);
-            color: #ffffff;
-            font-size: 22px;
-            padding: 10px 15px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background 0.2s, color 0.2s;
-        }
+    .gallery-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 1.75rem;
+      border-radius: 16px;
+      border-top: 5px solid var(--gold-primary);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.22);
+      text-align: center;
+      height: 100%;
+    }
 
-        .carousel-btn:hover {
-            background: #fcc200;
-            color: #2c2518;
-        }
+    .gallery-card h2 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.5rem;
+      color: var(--dark-surface);
+      margin-bottom: 1.25rem;
+    }
 
-        .prev {
-            left: 12px;
-        }
+    .carousel {
+      max-width: 800px;
+      margin: 0 auto;
+    }
 
-        .next {
-            right: 12px;
-        }
+    .slides {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      background: var(--dark-surface);
+      border-radius: 12px;
+    }
 
-        .dots {
-            text-align: center;
-            padding: 16px 0 4px 0;
-        }
+    .slide {
+      position: absolute;
+      inset: 0;
+      margin: 0;
+    }
 
-        .dot {
-            width: 13px;
-            height: 13px;
-            margin: 0 6px;
-            padding: 0;
-            border: none;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.7);
-            cursor: pointer;
-            transition: background 0.2s, transform 0.2s;
-        }
+    .slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
 
-        .dot:hover {
-            background: #fcc200;
-        }
+    .slide figcaption {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 0.85rem 1.1rem;
+      background: rgba(30, 30, 36, 0.88);
+      color: #ffffff;
+      font-size: 0.98rem;
+      font-weight: 600;
+      border-top: 2px solid var(--gold-primary);
+    }
 
-        .dot.active {
-            background: #b78727;
-            transform: scale(1.2);
-        }
+    .carousel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 5;
+      border: none;
+      background: rgba(30, 30, 36, 0.75);
+      color: #ffffff;
+      font-size: 1.2rem;
+      padding: 0.65rem 0.95rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
 
-        /* Footer - Matches Home, About, Portfolio & Contact */
-        footer {
-            background-color: #fcc200;
-            color: #ffffff;
-            text-align: center;
-            padding: 16px 20px;
-            font-size: 15px;
-            border-top: 3px solid #b78727;
-        }
+    .carousel-btn:hover {
+      background: var(--gold-primary);
+      color: var(--dark-surface);
+    }
 
-        /* Responsive Design */
-        @media (max-width: 1024px) {
-            .page-layout {
-                grid-template-columns: 1fr 1fr;
-            }
+    .prev { left: 12px; }
+    .next { right: 12px; }
 
-            main {
-                grid-column: 1 / -1;
-                order: -1;
-            }
-        }
+    .dots {
+      text-align: center;
+      padding: 1rem 0 0.25rem 0;
+    }
 
-        @media (max-width: 768px) {
-            body {
-                background-attachment: scroll;
-            }
+    .dot {
+      width: 11px;
+      height: 11px;
+      margin: 0 5px;
+      padding: 0;
+      border: none;
+      border-radius: 50%;
+      background: #cbd5e1;
+      cursor: pointer;
+      transition: background-color 0.2s ease, transform 0.2s ease;
+    }
 
-            nav {
-                flex-wrap: wrap;
-            }
+    .dot:hover {
+      background: var(--gold-hover);
+    }
 
-            nav a {
-                padding: 10px;
-                font-size: 14px;
-            }
+    .dot.active {
+      background: var(--gold-primary);
+      transform: scale(1.25);
+    }
 
-            .page-layout {
-                grid-template-columns: 1fr;
-                margin: 25px auto;
-                padding: 0 16px;
-            }
+    footer {
+      background-color: var(--dark-surface);
+      color: #d1d5db;
+      text-align: center;
+      padding: 1.1rem 1.5rem;
+      font-size: 0.875rem;
+    }
 
-            .gallery-card {
-                padding: 22px 16px;
-            }
-        }
-    </style>
+    footer span {
+      color: var(--gold-primary);
+      font-weight: 600;
+    }
+
+    @media (max-width: 1024px) {
+      .page-layout {
+        grid-template-columns: 1fr 1fr;
+        align-items: start;
+      }
+
+      aside {
+        height: auto;
+        display: block;
+      }
+
+      .aside-left .aside-body,
+      .aside-right .desc-content {
+        display: block;
+      }
+
+      main {
+        grid-column: 1 / -1;
+        order: -1;
+      }
+
+      .gallery-card {
+        height: auto;
+      }
+    }
+
+    @media (max-width: 680px) {
+      body {
+        background-attachment: scroll;
+      }
+
+      header {
+        padding: 0.85rem 1rem;
+      }
+
+      .nav-container {
+        justify-content: center;
+      }
+
+      .page-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .gallery-card {
+        padding: 1.25rem;
+      }
+    }
+  </style>
 </head>
 <body>
 
-    <!-- Navigation -->
-    <nav>
-        <a href="index.html">Home</a>
-        <a href="about.html">About</a>
-        <a href="gallery.html" class="active">Gallery</a>
-        <a href="portfolio.html">Portfolio</a>
-        <a href="contact.html">Contact</a>
-    </nav>
+  <header>
+    <div class="nav-container">
+      <a href="index.html" class="brand">yori<span>.Homes</span></a>
+      <nav aria-label="Main Navigation">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="gallery.html" class="active">Gallery</a></li>
+          <li><a href="portfolio.html">Portfolio</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
 
-    <!-- Page Header -->
-    <header>
-        <h1>Gallery</h1>
-    </header>
-
-    <!-- Main Layout -->
-    <div class="page-layout">
-        <!-- Left Aside -->
-        <aside class="aside-left" aria-label="Gallery notes">
-            <h3>About This Gallery</h3>
-            <p>A quick look at the people, memories, and goals that shape my journey.</p>
-            <ul>
-                <li><strong>Tip:</strong> Use arrow keys or buttons to browse.</li>
-                <li><strong>Photos:</strong> 4 personal highlights</li>
-            </ul>
-        </aside>
-
-        <!-- Main Content -->
-        <main>
-            <div class="gallery-card">
-                <h2>My Photo Gallery</h2>
-
-                <div class="carousel" id="carousel">
-                    <div class="slides">
-                        <figure class="slide" data-desc="Sailing the seas and building a career at sea is a big dream I am working toward.">
-                            <img src="futureme.jpg" alt="Myfuture">
-                            <figcaption>I want to become a Seaman in the future</figcaption>
-                        </figure>
-                        <figure class="slide" data-desc="Moments with my family remind me of my roots, support system, and everyday joy.">
-                            <img src="family.jpg" alt="Family">
-                            <figcaption>This my whole family and all of us we're happy</figcaption>
-                        </figure>
-                        <figure class="slide" data-desc="Memories with my G9–G10 barkada—lots of laughs, stories, and friendships that stuck.">
-                            <img src="ogfriends.jpg" alt="friends">
-                            <figcaption>This is my friends since g9-g10 most of them are girl</figcaption>
-                        </figure>
-                        <figure class="slide" data-desc="A snapshot of my student life as I keep learning and growing step by step.">
-                            <img src="vince.jpg" alt="JSme">
-                            <figcaption>I dont have a uniform yet but yes i am a student</figcaption>
-                        </figure>
-                        <button class="carousel-btn prev" type="button" aria-label="Previous slide">&#10094;</button>
-                        <button class="carousel-btn next" type="button" aria-label="Next slide">&#10095;</button>
-                    </div>
-                    <div class="dots"></div>
-                </div>
-            </div>
-        </main>
-
-        <!-- Right Aside -->
-        <aside class="aside-right" aria-label="Photo description">
-            <span class="desc-badge" id="slideCounter">Photo 1 of 4</span>
-            <h3>Short Description</h3>
-            <p id="slideDescription">Sailing the seas and building a career at sea is a big dream I am working toward.</p>
-        </aside>
+  <div class="wrapper">
+    <div class="page-title-bar">
+      <h1>Gallery</h1>
     </div>
 
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2026 yori.Homes | Vince Zyvon D. Florano</p>
-    </footer>
+    <div class="page-layout">
+      <aside class="aside-left" aria-label="Gallery notes">
+        <div class="aside-body">
+          <h3>About This Gallery</h3>
+          <p>A quick look at the people, memories, and goals that shape my journey from my life as a Grade 12 ICT student to the dreams I'm working toward.</p>
+          <ul>
+            <li><strong>Tip:</strong> Use arrow keys or buttons to browse.</li>
+            <li><strong>Autoplay:</strong> Pauses when you hover over a photo.</li>
+            <li><strong>Photos:</strong> 4 personal highlights</li>
+          </ul>
+        </div>
+      </aside>
 
-    <!-- jQuery Carousel Script -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            const $carousel = $("#carousel");
-            const $slides = $carousel.find(".slide");
-            const $dotsBox = $carousel.find(".dots");
-            const $descText = $("#slideDescription");
-            const $counter = $("#slideCounter");
-            const total = $slides.length;
-            const FADE_TIME = 500;
-            const DELAY = 4000;
-            let current = 0;
-            let timer = null;
+      <main>
+        <div class="gallery-card">
+          <h2>My Photo Gallery</h2>
+          <div class="carousel" id="carousel">
+            <div class="slides">
+              <figure class="slide" data-desc="Sailing the seas and building a career at sea is a big dream I am working toward. It takes discipline, courage, and hard work values I practice every day as a student while preparing for the future ahead.">
+                <img src="futureme.jpg" alt="My future goal as a seaman" />
+                <figcaption>I want to become a Seaman in the future</figcaption>
+              </figure>
+              <figure class="slide" data-desc="Moments with my family remind me of my roots, my support system, and everyday joy. No matter how busy school and coding projects get, spending time together keeps me grounded and grateful.">
+                <img src="family.jpg" alt="My whole family" />
+                <figcaption>This is my whole family, and we're all happy</figcaption>
+              </figure>
+              <figure class="slide" data-desc="Memories with my G9–G10 barkada lots of laughs, stories, and friendships that stuck. Even as we move forward in senior high school, these moments remain some of my favorite highlights.">
+                <img src="ogfriends.jpg" alt="My friends from Grade 9 to Grade 10" />
+                <figcaption>My friends since G9–G10—most of them girls</figcaption>
+              </figure>
+              <figure class="slide" data-desc="A snapshot of my student life at Governor Juanito Reyes Remulla Senior High School as I keep learning, practicing programming, and growing step by step toward my goals.">
+                <img src="vince.jpg" alt="Vince as a student" />
+                <figcaption>I don't have a uniform yet, but yes, I'm a student</figcaption>
+              </figure>
+              <button class="carousel-btn prev" type="button" aria-label="Previous slide">&#10094;</button>
+              <button class="carousel-btn next" type="button" aria-label="Next slide">&#10095;</button>
+            </div>
+            <div class="dots"></div>
+          </div>
+        </div>
+      </main>
 
-            $slides.hide().eq(0).show();
-            updateAside(0);
+      <aside class="aside-right" aria-label="Photo description">
+        <span class="desc-badge" id="slideCounter">Photo 1 of 4</span>
+        <div class="desc-content">
+          <h3>Short Description</h3>
+          <p id="slideDescription">Sailing the seas and building a career at sea is a big dream I am working toward. It takes discipline, courage, and hard work values I practice every day as a student while preparing for the future ahead.</p>
+        </div>
+      </aside>
+    </div>
+  </div>
 
-            function updateAside(index) {
-                const desc = $slides.eq(index).data("desc") || "";
-                $descText.text(desc);
-                $counter.text("Photo " + (index + 1) + " of " + total);
-            }
+  <footer>
+    <p>&copy; 2026 <span>yori.Homes</span> | Vince Zyvon D. Florano</p>
+  </footer>
 
-            $slides.each(function (i) {
-                $("<button>")
-                    .attr({ type: "button", "aria-label": "Go to slide " + (i + 1) })
-                    .addClass("dot" + (i === 0 ? " active" : ""))
-                    .data("index", i)
-                    .appendTo($dotsBox);
-            });
-            const $dots = $dotsBox.find(".dot");
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      const $carousel = $("#carousel");
+      const $slides = $carousel.find(".slide");
+      const $dotsBox = $carousel.find(".dots");
+      const $descText = $("#slideDescription");
+      const $counter = $("#slideCounter");
+      const total = $slides.length;
+      const FADE_TIME = 500;
+      const DELAY = 4000;
+      let current = 0;
+      let timer = null;
 
-            function showSlide(index) {
-                if (index === current) return;
+      $slides.hide().eq(0).show();
+      updateAside(0);
 
-                $slides.eq(current).stop(true, true).fadeOut(FADE_TIME);
-                $slides.eq(index).stop(true, true).fadeIn(FADE_TIME);
-                $dots.removeClass("active").eq(index).addClass("active");
-                updateAside(index);
+      function updateAside(index) {
+        const desc = $slides.eq(index).data("desc") || "";
+        $descText.text(desc);
+        $counter.text("Photo " + (index + 1) + " of " + total);
+      }
 
-                current = index;
-            }
+      $slides.each(function (i) {
+        $("<button>")
+          .attr({ type: "button", "aria-label": "Go to slide " + (i + 1) })
+          .addClass("dot" + (i === 0 ? " active" : ""))
+          .data("index", i)
+          .appendTo($dotsBox);
+      });
+      const $dots = $dotsBox.find(".dot");
 
-            function nextSlide() { showSlide((current + 1) % total); }
-            function prevSlide() { showSlide((current - 1 + total) % total); }
+      function showSlide(index) {
+        if (index === current) return;
+        $slides.eq(current).stop(true, true).fadeOut(FADE_TIME);
+        $slides.eq(index).stop(true, true).fadeIn(FADE_TIME);
+        $dots.removeClass("active").eq(index).addClass("active");
+        updateAside(index);
+        current = index;
+      }
 
-            $carousel.on("click", ".next", nextSlide);
-            $carousel.on("click", ".prev", prevSlide);
-            $dotsBox.on("click", ".dot", function () {
-                showSlide($(this).data("index"));
-            });
+      function nextSlide() { showSlide((current + 1) % total); }
+      function prevSlide() { showSlide((current - 1 + total) % total); }
 
-            function startAutoplay() {
-                stopAutoplay();
-                timer = setInterval(nextSlide, DELAY);
-            }
+      $carousel.on("click", ".next", nextSlide);
+      $carousel.on("click", ".prev", prevSlide);
+      $dotsBox.on("click", ".dot", function () {
+        showSlide($(this).data("index"));
+      });
 
-            function stopAutoplay() {
-                clearInterval(timer);
-            }
+      function startAutoplay() {
+        stopAutoplay();
+        timer = setInterval(nextSlide, DELAY);
+      }
 
-            $carousel.on("mouseenter", stopAutoplay)
-                .on("mouseleave", startAutoplay);
+      function stopAutoplay() {
+        clearInterval(timer);
+      }
 
-            startAutoplay();
+      $carousel.on("mouseenter", stopAutoplay).on("mouseleave", startAutoplay);
+      startAutoplay();
 
-            $(document).on("keydown", function (event) {
-                if (event.key === "ArrowRight") {
-                    nextSlide();
-                } else if (event.key === "ArrowLeft") {
-                    prevSlide();
-                }
-            });
-        });
-    </script>
+      $(document).on("keydown", function (event) {
+        if (event.key === "ArrowRight") nextSlide();
+        else if (event.key === "ArrowLeft") prevSlide();
+      });
+    });
+  </script>
 
 </body>
 </html>
