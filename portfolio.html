@@ -1,199 +1,247 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>yori.Homes - Portfolio</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio | yori.Homes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --gold-primary: #f4b400;
+      --gold-hover: #d99b00;
+      --gold-soft: #fff8e1;
+      --dark-surface: #1e1e24;
+      --dark-text: #1f2937;
+      --muted-text: #4b5563;
+      --card-bg: rgba(255, 255, 255, 0.9);
+      --border-light: rgba(0, 0, 0, 0.08);
+    }
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-        body {
-            background-image: url("vinland.jpg");
-            background-color: #fdfbf7;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            color: #2c2518;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--dark-text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background:
+        linear-gradient(rgba(30, 30, 36, 0.35), rgba(30, 30, 36, 0.45)),
+        url("vinland.jpg") center / cover no-repeat fixed;
+      line-height: 1.6;
+    }
 
-        /* Navigation Bar - Matches About & Home */
-        nav {
-            background: #fcc200;
-            display: flex;
-            justify-content: center;
-            padding: 0 20px;
-            gap: 10px;
-        }
+    header {
+      background-color: var(--dark-surface);
+      padding: 0.85rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
 
-        nav a {
-            color: #ffffff;
-            text-decoration: none;
-            padding: 15px 25px;
-            font-size: 18px;
-            font-weight: bold;
-            transition: background 0.2s;
-        }
+    .nav-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
 
-        nav a:hover,
-        nav a.active {
-            background: #b78727;
-            color: #ffffff;
-            border-bottom: 4px solid #fff3b0;
-        }
+    .brand {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 800;
+      font-size: 1.25rem;
+      color: #ffffff;
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
 
-        /* Page Header - Matches About & Home */
-        header {
-            background: #b78727;
-            text-align: center;
-            padding: 35px 20px;
-            border-bottom: 4px solid #fcc200;
-        }
+    .brand span {
+      color: var(--gold-primary);
+    }
 
-        header h1 {
-            color: #ffffff;
-            font-size: 32px;
-            letter-spacing: 0.5px;
-        }
+    nav ul {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
 
-        /* Main Portfolio Grid */
-        .container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 20px;
-            max-width: 1200px;
-            width: 100%;
-            margin: 50px auto;
-            padding: 0 30px;
-            flex: 1;
-            align-content: start;
-        }
+    nav a {
+      text-decoration: none;
+      color: #e5e7eb;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.45rem 0.9rem;
+      border-radius: 6px;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
 
-        /* Project Cards */
-        .box {
-            background: rgba(255, 255, 255, 0.72);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border-radius: 10px;
-            border-top: 5px solid #fcc200;
-            box-shadow: 0 4px 12px rgba(183, 135, 39, 0.16);
-            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
-            overflow: hidden;
-        }
+    nav a:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+    }
 
-        .box:hover {
-            transform: translateY(-4px);
-            border-top-color: #b78727;
-            box-shadow: 0 8px 18px rgba(183, 135, 39, 0.26);
-        }
+    nav a.active {
+      background-color: var(--gold-primary);
+      color: var(--dark-surface);
+      font-weight: 600;
+    }
 
-        .box a.link {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 28px 18px;
-            height: 100%;
-            color: #2c2518;
-            text-decoration: none;
-            font-size: 18px;
-            font-weight: bold;
-            transition: background 0.2s, color 0.2s;
-        }
+    main {
+      flex: 1;
+      max-width: 1160px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 2.75rem 1.5rem;
+    }
 
-        .box:hover a.link {
-            background: rgba(255, 249, 230, 0.9);
-            color: #8f6516;
-        }
+    .page-title-bar {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
 
-        /* Footer - Matches About & Home */
-        footer {
-            background-color: #fcc200;
-            color: #ffffff;
-            text-align: center;
-            padding: 16px 20px;
-            font-size: 15px;
-            border-top: 3px solid #b78727;
-        }
+    .page-title-bar h1 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: clamp(1.75rem, 4vw, 2.25rem);
+      font-weight: 800;
+      color: #ffffff;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
+    }
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            body {
-                background-attachment: scroll;
-            }
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.15rem;
+    }
 
-            nav {
-                flex-wrap: wrap;
-            }
+    .box {
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 14px;
+      border-top: 5px solid var(--gold-primary);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      overflow: hidden;
+    }
 
-            nav a {
-                padding: 10px;
-                font-size: 14px;
-            }
+    .box:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 18px 36px rgba(0, 0, 0, 0.25);
+    }
 
-            .container {
-                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-                padding: 0 20px;
-            }
-        }
-    </style>
+    .box a.link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 1.65rem 1.15rem;
+      height: 100%;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: var(--dark-surface);
+      text-decoration: none;
+      font-size: 1.02rem;
+      font-weight: 700;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .box:hover a.link {
+      background-color: var(--gold-soft);
+      color: #926000;
+    }
+
+    footer {
+      background-color: var(--dark-surface);
+      color: #d1d5db;
+      text-align: center;
+      padding: 1.1rem 1.5rem;
+      font-size: 0.875rem;
+    }
+
+    footer span {
+      color: var(--gold-primary);
+      font-weight: 600;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        background-attachment: scroll;
+      }
+
+      header {
+        padding: 0.85rem 1rem;
+      }
+
+      .nav-container {
+        justify-content: center;
+      }
+
+      .container {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      }
+    }
+  </style>
 </head>
-
 <body>
 
-    <!-- Navigation -->
-    <nav>
-        <a href="index.html">Home</a>
-        <a href="about.html">About</a>
-        <a href="gallery.html">Gallery</a>
-        <a href="portfolio.html" class="active">Portfolio</a>
-        <a href="contact.html">Contact</a>
-    </nav>
+  <header>
+    <div class="nav-container">
+      <a href="index.html" class="brand">yori<span>.Homes</span></a>
+      <nav aria-label="Main Navigation">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="portfolio.html" class="active">Portfolio</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
 
-    <!-- Page Header -->
-    <header>
-        <h1>My Portfolio</h1>
-    </header>
+  <main>
+    <div class="page-title-bar">
+      <h1>My Portfolio</h1>
+    </div>
 
-    <!-- Portfolio Projects Grid -->
-    <main class="container">
-        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/Forms.html" class="link">Forms</a></div>
-        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/savegrades.html" class="link">Save Grades</a></div>
-        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/schedule.html" class="link">Class Sched</a></div>
-        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/styledsched.html" class="link">Styled Sched</a></div>
-        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/Yori.html" class="link">LogIn Form</a></div>
-        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/sample.html" class="link">Console Example</a></div>
-        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/DcCalc.html" class="link">Discount Calculator</a></div>
-        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/samplecalc.html" class="link">Sample Calculator</a></div>
-        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/dotnetframework.html" class="link">DotNet Framework</a></div>
-        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/STUDENTSLIST.html" class="link">Students Data</a></div>
-        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/LOGINLOGIC.html" class="link">LogInLogic</a></div>
-        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/DEMOGRID.html" class="link">Grid</a></div>
-        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/gallerysample.html" class="link">GallerySample</a></div>
-        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/accordion.html" class="link">AccordionSample</a></div>
-        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/jQuery.html" class="link">jQuerySample</a></div>
-        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/snowman.html" class="link">Canvas Drill</a></div>
-        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/practiceflex.html" class="link">Flex Box</a></div>
-        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/DragAndDrop.html" class="link">Drag and Drop game</a></div>
-        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/Draganddrop.html" class="link">Drag and drop API</a></div>
-        <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/svg.html" class="link">SVG Drill</a></div>
-    </main>
+    <div class="container">
+      <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/Forms.html" class="link">Forms</a></div>
+      <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/savegrades.html" class="link">Save Grades</a></div>
+      <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/schedule.html" class="link">Class Sched</a></div>
+      <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/styledsched.html" class="link">Styled Sched</a></div>
+      <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/Yori.html" class="link">LogIn Form</a></div>
+      <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/sample.html" class="link">Console Example</a></div>
+      <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/DcCalc.html" class="link">Discount Calculator</a></div>
+      <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/samplecalc.html" class="link">Sample Calculator</a></div>
+      <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/dotnetframework.html" class="link">DotNet Framework</a></div>
+      <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/STUDENTSLIST.html" class="link">Students Data</a></div>
+      <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/LOGINLOGIC.html" class="link">LogInLogic</a></div>
+      <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/DEMOGRID.html" class="link">Grid</a></div>
+      <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/gallerysample.html" class="link">GallerySample</a></div>
+      <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/accordion.html" class="link">AccordionSample</a></div>
+      <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/jQuery.html" class="link">jQuerySample</a></div>
+      <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/snowman.html" class="link">Canvas Drill</a></div>
+      <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/practiceflex.html" class="link">Flex Box</a></div>
+      <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/DragAndDrop.html" class="link">Drag and Drop game</a></div>
+      <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/Draganddrop.html" class="link">Drag and drop API</a></div>
+      <div class="box"><a href="https://vincezyv.github.io/VincePortfolio/svg.html" class="link">SVG Drill</a></div>
+    </div>
+  </main>
 
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2026 yori.Homes | Vince Zyvon D. Florano</p>
-    </footer>
+  <footer>
+    <p>&copy; 2026 <span>yori.Homes</span> | Vince Zyvon D. Florano</p>
+  </footer>
 
 </body>
-
 </html>
